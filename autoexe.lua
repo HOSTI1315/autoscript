@@ -62,7 +62,7 @@ end
 local function urls(id)
     local total = {}
     
-    for game, urls in pairs(games) do
+    for creator, urls in pairs(creator) do
         if type(creator) == "table" and table.find(creator, id) or creator == id then
             for _, url in ipairs(urls) do
                 table.insert(total, url)
