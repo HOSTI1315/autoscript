@@ -1,5 +1,5 @@
 --! Configuration
-local creator = {
+local games = {
 -- Код игры
     --- скрипт
 
@@ -62,8 +62,8 @@ end
 local function urls(id)
     local total = {}
     
-    for creator, urls in pairs(creator) do
-        if type(creator) == "table" and table.find(creator, id) or creator == id then
+    for game, urls in pairs(games) do
+        if type(game) == "table" and table.find(game, id) or game == id then
             for _, url in ipairs(urls) do
                 table.insert(total, url)
             end
@@ -74,6 +74,12 @@ local function urls(id)
 end
 
 --! Set-up
+if #getgenv().SNCO_Scripts == 0 then
+    populate(urls(game.PlaceId))
+end
+
+--! Initialize
+initialize()
 if #getgenv().SNCO_Scripts == 0 then
     populate(urls(game.CreatorId))
 end
