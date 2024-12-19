@@ -1,17 +1,21 @@
 --! Configuration
-local games = {
+local creator = {
 -- Код игры
     --- скрипт
+
+    -- Фиш
     [16732694052] = {
         "https://nousigi.com/loader.lua",
     },
+    -- АС
     [89438510123061] = {
         "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader"
     },
-    [{ 17046374415, 33820338, 16732694052 }] = {
+    -- АР
+    [{ 17046374415, 33820338, 1996666471 }] = {
         "https://nousigi.com/loader.lua"
     },
-    [16841929299] = {
+    [18343561950] = {
         "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
     }
 }
@@ -59,7 +63,7 @@ local function urls(id)
     local total = {}
     
     for game, urls in pairs(games) do
-        if type(game) == "table" and table.find(game, id) or game == id then
+        if type(creator) == "table" and table.find(creator, id) or creator == id then
             for _, url in ipairs(urls) do
                 table.insert(total, url)
             end
@@ -71,7 +75,7 @@ end
 
 --! Set-up
 if #getgenv().SNCO_Scripts == 0 then
-    populate(urls(game.PlaceId))
+    populate(urls(game.CreatorId))
 end
 
 --! Initialize
