@@ -25,7 +25,39 @@ if not getgenv().SNCO_Scripts then
     getgenv().SNCO_Scripts = {}
 end
 
---
+--! Functions
+local function execute(script)
+    task.spawn(function ()
+        local success, error = pcall(loadstring(script))
+
+        if not success then
+            warn("Failed loading script:", error)
+        end
+    end)
+end
+
+local function fetch(url)
+    local response = request({ Url = url, Method = "GET" })
+    return response.Success, response.Body
+end
+
+local function populate(urls)
+    for _, url in ipairs(urls) do
+        local success, script = fetch(url)
+    
+        if success then
+            table.insert(getgenv().SNCO_Scripts, script)
+        end
+    end
+end
+
+local function initialize()
+    repeat task.wait(10) until game:IsLoaded()
+
+    for _, script in ipairs(getgenv().SNCO_Scripts) do
+        execute(script)
+    end
+end
 
 local function urls(id)
     local total = {}
@@ -41,8 +73,16 @@ local function urls(id)
     return total
 end
 
+--! Set-up
+if #getgenv().SNCO_Scripts == 0 then
+    populate(urls(game.PlaceId))
+end
+
 --! Initialize
 initialize()
 if #getgenv().SNCO_Scripts == 0 then
     populate(urls(game.CreatorId))
 end
+
+--! Initialize
+initialize()
