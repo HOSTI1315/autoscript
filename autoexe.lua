@@ -1,25 +1,48 @@
-if not game:IsLoaded() then
-	game.Loaded:Wait()
-end
-
-task.wait( math.random() )
-
+--! Configuration
 local games = {
-	[4386104527] = 'https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader', -- AS
-	[89438510123061] = 'https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader', -- AS
-	[5292947] =  'https://api.luarmor.net/files/v3/loaders/eef1f2c7ccd0aaf83d95f052ef2e934a.lua'
-	
+-- Код игры
+    --- скрипт
+
+    -- Фиш
+    [16732694052] = {
+        "https://nousigi.com/loader.lua",
+    },
+    -- АС
+    [89438510123061] = {
+        "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader"
+    },
+    -- АР
+    [{ 17046374415, 33820338, 1996666471 }] = {
+        "https://nousigi.com/loader.lua"
+    },
+    [18343561950] = {
+        "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
+    }
 }
 
-if games[game.CreatorId] then
-	task.wait( math.random() )
-	if game.CreatorId == 4386104527 or game.CreatorId == 89438510123061 or game.CreatorId == 15762744 or game.CreatorId == 33859442 then
-		print('Loaded')
-		repeat 
-			loadstring(game:HttpGet(games[game.CreatorId]))()
-			task.wait(10)
-		until getgenv().buanghub ~= nil;
-	else
-		loadstring(game:HttpGet(games[game.CreatorId]))()
-	end
+--! Global
+if not getgenv().SNCO_Scripts then
+    getgenv().SNCO_Scripts = {}
+end
+
+--
+
+local function urls(id)
+    local total = {}
+    
+    for game, urls in pairs(games) do
+        if type(game) == "table" and table.find(game, id) or game == id then
+            for _, url in ipairs(urls) do
+                table.insert(total, url)
+            end
+        end
+    end
+
+    return total
+end
+
+--! Initialize
+initialize()
+if #getgenv().SNCO_Scripts == 0 then
+    populate(urls(game.CreatorId))
 end
