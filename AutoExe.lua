@@ -1,3 +1,4 @@
+-- Определение таблицы с CreatorId и URL для загрузки скриптов
 local scripts = {
    --- CreatorID
 	-- Фиш
