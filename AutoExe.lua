@@ -41,6 +41,3 @@ end
 
 -- Запуск основной функции
 runScriptForCreator()
-
--- Запуск основной функции
-runScriptForCreator()
