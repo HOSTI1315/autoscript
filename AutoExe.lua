@@ -1,13 +1,14 @@
--- Определение таблицы с CreatorId и URL для загрузки скриптов
 local scripts = {
+   --- CreatorID
 	-- Фиш
-	[16732694052] = "https://nousigi.com/loader.lua",  -- Замените на реальные ссылки
+	[7381705] = "https://nousigi.com/loader.lua",  -- Замените на реальные ссылки
 	-- АС
-	[4386104527] = "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader",
+	[33781793] = "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader",
 	-- АР
-	[196666471] = "https://nousigi.com/loader.lua"
+	[33820338] = "https://nousigi.com/loader.lua",
 	-- Шары
-	[95293074] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
+	[32380537] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
+	
 }
 
 -- Функция для загрузки и выполнения скрипта по URL
