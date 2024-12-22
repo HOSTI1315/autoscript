@@ -3,11 +3,11 @@ local scripts = {
 	-- Фиш
 	[16732694052] = "https://nousigi.com/loader.lua",  -- Замените на реальные ссылки
 	-- АС
-	[89438510123061] = "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader",
+	[4386104527] = "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader",
 	-- АР
-	[{ 17046374415, 33820338, 1996666471 }] = "https://nousigi.com/loader.lua"
+	[196666471] = "https://nousigi.com/loader.lua"
 	-- Шары
-	[18343561950] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
+	[95293074] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
 }
 
 -- Функция для загрузки и выполнения скрипта по URL
