@@ -11,9 +11,7 @@ if not getgenv().scriptExecuted then
         [33820338] = "https://nousigi.com/loader.lua",
         -- Flop
         [33799733] = "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader",
-        -- АА
-        [10611639] = "https://nousigi.com/loader.lua", 
-        [2550180166] = "https://nousigi.com/loader.lua", 
+
         -- Шары
         [32380537] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
     }
