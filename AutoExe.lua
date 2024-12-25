@@ -14,7 +14,7 @@ if not getgenv().scriptExecuted then
         -- Шары
         [32380537] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua",
         -- АА
-        [2550180166] = "https://nousigi.com/loader.lua"
+        [10611639] = "https://nousigi.com/loader.lua"
     }
 
     -- Функция для загрузки и выполнения скрипта по URL
