@@ -12,7 +12,9 @@ if not getgenv().scriptExecuted then
         -- Flop
         [33799733] = "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader",
         -- Шары
-        [32380537] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
+        [32380537] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua",
+        -- АА
+        [2550180166] = "https://nousigi.com/loader.lua"
     }
 
     -- Функция для загрузки и выполнения скрипта по URL
