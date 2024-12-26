@@ -12,7 +12,6 @@ if not getgenv().scriptExecuted then
         -- Flop
         [33799733] = "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader",
 
-        [10611639] = "https://raw.githubusercontent.com/HOSTI1315/autoscript/refs/heads/main/autofind.lua",
         -- Шары
         [32380537] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
     }
