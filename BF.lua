@@ -1,10 +1,10 @@
 script_key = "iOBQIRwEZvnsKtZaGrYWPhbTmqYQXoFI"
 getgenv().SetFpsCap = false
 getgenv().FpsCap = 10
-getgenv().OneClickUi = true -- Only Open Necessacry Ui For One Click
+getgenv().OneClickUi = false -- Only Open Necessacry Ui For One Click
 getgenv().FpsBoost1 = false
     getgenv().WhiteScreen = true
-    getgenv().UiCheckItems = false
+    getgenv().UiCheckItems = true
     getgenv().OneClickSetting = {
         Enable=true,
         UnlimitGetQuest=true,
