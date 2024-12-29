@@ -1,10 +1,10 @@
 script_key = "iOBQIRwEZvnsKtZaGrYWPhbTmqYQXoFI"
 getgenv().SetFpsCap = false
 getgenv().FpsCap = 10
-getgenv().OneClickUi = false -- Only Open Necessacry Ui For One Click
+getgenv().OneClickUi = true -- Only Open Necessacry Ui For One Click
 getgenv().FpsBoost1 = false
     getgenv().WhiteScreen = true
-    getgenv().UiCheckItems = true
+    getgenv().UiCheckItems = false
     getgenv().OneClickSetting = {
         Enable=true,
         UnlimitGetQuest=true,
@@ -25,7 +25,7 @@ getgenv().FpsBoost1 = false
         HopValkyriehelm = true,
         HopMirrorFractal=true,
         FarmPole = false, -- Turn off If Want Focus Level
-        FarmItems = true, --Turn off If Want Focus Level And CDK, THis Only get After You Get God Human
+        FarmItems = false, --Turn off If Want Focus Level And CDK, THis Only get After You Get God Human
         DisableSoulGuitar = false,
         DisableCDK = false,
 
@@ -35,4 +35,4 @@ getgenv().FpsBoost1 = false
     }
 getgenv().Team = "Pirates"
 getgenv().AutoLoad = false --Will Load Script On Server Hop
- loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/3b2169cf53bc6104dabe8e19562e5cc2.lua"))()
+ loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/3b2169cf53bc6104dabe8e19562e5cc2.lua"))() 
