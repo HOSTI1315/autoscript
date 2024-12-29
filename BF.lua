@@ -13,7 +13,7 @@ getgenv().FpsBoost1 = false
         RedeemCode=true,
         Sea2KeyHop=true,
         FruitEat = { --Priority, Name, 
-            [1] = {"Magma-Magma"},
+            [1] = {"Light-Light"},
             [2] = {"Magma-Magma"}
         },
         EatFruitFromStorage = true,
