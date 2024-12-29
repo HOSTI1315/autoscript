@@ -4,7 +4,7 @@ getgenv().FpsCap = 10
 getgenv().OneClickUi = true -- Only Open Necessacry Ui For One Click
 getgenv().FpsBoost1 = false
     getgenv().WhiteScreen = true
-    getgenv().UiCheckItems = false
+    getgenv().UiCheckItems = true
     getgenv().OneClickSetting = {
         Enable=true,
         UnlimitGetQuest=true,
@@ -25,7 +25,7 @@ getgenv().FpsBoost1 = false
         HopValkyriehelm = true,
         HopMirrorFractal=true,
         FarmPole = false, -- Turn off If Want Focus Level
-        FarmItems = false, --Turn off If Want Focus Level And CDK, THis Only get After You Get God Human
+        FarmItems = true, --Turn off If Want Focus Level And CDK, THis Only get After You Get God Human
         DisableSoulGuitar = false,
         DisableCDK = false,
 
