@@ -25,7 +25,7 @@ getgenv().FpsBoost1 = false
         HopValkyriehelm = true,
         HopMirrorFractal=true,
         FarmPole = false, -- Turn off If Want Focus Level
-        FarmItems = false, --Turn off If Want Focus Level And CDK, THis Only get After You Get God Human
+        FarmItems = true, --Turn off If Want Focus Level And CDK, THis Only get After You Get God Human
         DisableSoulGuitar = false,
         DisableCDK = false,
 
