@@ -1,7 +1,7 @@
 script_key = "iOBQIRwEZvnsKtZaGrYWPhbTmqYQXoFI"
 getgenv().SetFpsCap = true
 getgenv().FpsCap = 30
-getgenv().OneClickUi = true -- Only Open Necessacry Ui For One Click
+getgenv().OneClickUi = false -- Only Open Necessacry Ui For One Click
 getgenv().FpsBoost1 = false
     getgenv().WhiteScreen = true
     getgenv().UiCheckItems = true
