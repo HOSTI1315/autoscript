@@ -7,7 +7,7 @@ getgenv().WebhookSetting = {
     StoredFruit = true,
     ImageEmbed = true,
     CustomImage = true,
-    CustomImageUrl = "https://cdn.discordapp.com/attachments/1162810322181173309/1324719084289527808/cbdac3d0-874f-4430-89b5-4316b8d7ad54.jpg?ex=67792c49&is=6777dac9&hm=182f067acd8e217f51a58a462a3a932926423d0589b5696616d384f7ba4473f2&", --cf by eric
+    CustomImageUrl = "https://cdn.discordapp.com/attachments/1162810322181173309/1324719084289527808/cbdac3d0-874f-4430-89b5-4316b8d7ad54.jpg?ex=67792c49&is=6777dac9&hm=182f067acd8e217f51a58a462a3a932926423d0589b5696616d384f7ba4473f2&", --cf by skrilya
     OnServerHop = false,
     BountyChanged = true,
 }
@@ -19,8 +19,8 @@ getgenv().PlayerSetting = {
     DashIfV4 = true,
     Dash= false,
     IgnoreInCombat = true, --Turn This Off When Reseting Or Hop You Lost Bounty (Rare, Happens On Some Accounts) cf by eric
-    ChatKillEnable = false,
-    Chat = {"gg","gg"},
+    ChatKillEnable = true,
+    Chat = {"EZFW","gg"},
     IgnoreFriends = false, --true neu muon co ban be vao no hop sv
 }
 getgenv().AttackSetting = {
@@ -108,7 +108,7 @@ getgenv().WeaponsSetting = {
         },
     },
     ["Sword"] = {
-        ["Enable"] = false,
+        ["Enable"] = true,
         ["Delay"] = 0.5,
         ["Skills"] = {
             ["Z"] = {
@@ -144,7 +144,7 @@ getgenv().Theme = { -- getgenv().Theme = false if you want to disable
     OldTheme = false,
     Name="Raiden", --"Raiden","Ayaka","Hutao","Yelan","Miko","Nahida","Ganyu","Keqing","Nilou","Barbara","Zhongli","Layla"
     Custom={
-            ["Enable"] = false,
+            ["Enable"] = true,
             ['char_size'] = UDim2.new(0.668, 0, 1.158, 0),
             ['char_pos'] = UDim2.new(0.463, 0, -0.105, 0),
             ['title_color'] = Color3.fromRGB(255, 221, 252),
@@ -155,3 +155,4 @@ getgenv().Theme = { -- getgenv().Theme = false if you want to disable
        }
 }
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/248f97d7a28a4d09c641d8279a935333.lua"))()
+
