@@ -1,4 +1,4 @@
-script_key="XLlfghtRhSumlLbdNJMgPwRWuyOtHsuq";
+script_key="oReszqqCpjyXRgnGdgYQXOmVvwNrNiZs";
 
 
 if game.CreatorId == 4372130 then --Blox fruits 
