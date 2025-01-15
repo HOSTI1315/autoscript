@@ -1,4 +1,3 @@
--- Глобальная переменная для отслеживания выполнения скрипта
 if not getgenv().scriptExecuted then
     -- Определение таблицы с CreatorId и URL для загрузки скриптов
     local scripts = {
@@ -10,8 +9,15 @@ if not getgenv().scriptExecuted then
         -- АР
         [33820338] = "https://nousigi.com/loader.lua",
         -- Flop
-        [33799733] = "https://raw.githubusercontent.com/ZaRdoOx/Fazium-files/main/Loader",
-
+        [33799733] = "https://raw.githubusercontent.com/0vma/Strelizia/refs/heads/main/Loader.lua",
+        -- АА
+        [10611639] = "https://raw.githubusercontent.com/HOSTI1315/autoscript/refs/heads/main/buang.lua",
+        -- BF
+        [4372130] = "https://raw.githubusercontent.com/HOSTI1315/autoscript/refs/heads/main/BF.lua",
+        -- JoJo
+        [15557357] = "https://raw.githubusercontent.com/HOSTI1315/autoscript/refs/heads/main/JoJoINF.lua",
+        --СпанчБобек
+        [34990762] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/Main.lua",
         -- Шары
         [32380537] = "https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/BallTowerDefense.lua"
     }
