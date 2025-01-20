@@ -60,14 +60,19 @@ local function checkChat()
         if child:IsA("Frame") and child:FindFirstChild("TextLabel") then
             local messageText = child.TextLabel.Text
 
-            -- Проверяем, содержит ли сообщение упоминание из списка
-            for discordID, nicks in pairs(settings.userMentions) do
-                for _, nick in pairs(nicks) do
-                    if messageText:find(nick) then
-                        -- Ищем фразу "pulled a" и извлекаем информацию
-                        local pulledText = messageText:match("pulled a (.+) from")
-                        if pulledText then
-                            sendWebhook(string.format("%s выбил %s из Ice Star!", discordID, pulledText))
+            -- Проверяем, не было ли сообщение уже обработано
+            if not messageText:find("Увед отправлен") then
+                -- Проверяем, содержит ли сообщение упоминание из списка
+                for discordID, nicks in pairs(settings.userMentions) do
+                    for _, nick in pairs(nicks) do
+                        if messageText:find(nick) then
+                            -- Ищем фразу "pulled a" и извлекаем информацию
+                            local pulledText = messageText:match("pulled a (.+) from")
+                            if pulledText then
+                                sendWebhook(string.format("%s выбил %s из Ice Star!", discordID, pulledText))
+                                -- Помечаем сообщение как обработанное
+                                child.TextLabel.Text = "Увед отправлен: " .. messageText
+                            end
                         end
                     end
                 end
