@@ -1,4 +1,5 @@
-enumaelish
-WinterUpdateSoon
-FateUpdate
- 
+20KCHANNEL
+40KCHANNEL
+CHROLLO100K
+40KAGAIN
+THECODE
