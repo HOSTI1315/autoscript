@@ -1,3 +1,4 @@
+--Pet Simulator 99! - Mining Event Settings
 _G.ZapSettings = {
 ["PetSimulator99 - AutoFarmActualMiningEggTypeDropdown"] = "Rainbow", -- Options = {"Normal", "Golden", "Rainbow"}
 ["PetSimulator99 - AutoFarmActualMiningEggToggle"] = true, 
