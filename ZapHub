@@ -1,44 +1,26 @@
---Pet Simulator 99!
 _G.ZapSettings = {
-["PetSimulator99 - DisableBreakablesModelsToggle"] = true, 
-["PetSimulator99 - DisableConfettiRenderingToggle"] = true, 
+["PetSimulator99 - AutoFarmActualMiningEggTypeDropdown"] = "Rainbow", -- Options = {"Normal", "Golden", "Rainbow"}
+["PetSimulator99 - AutoFarmActualMiningEggToggle"] = true, 
+["PetSimulator99 - AutoTeleportToBestMiningWorldToggle"] = true, 
+["PetSimulator99 - AutoBuyNextMiningAreaToggle"] = true, 
+["PetSimulator99 - AutoBuyAmethystPickaxeToggle"] = true, 
+["PetSimulator99 - AutoMiningBlockBlacklistBlockMultiDropdown"] = {}, -- Options = {"Dirt", "Stone", "Cobblestone", "Sand", "Gold", "Magma", "Obsidian", "Elderstone", "Crimsonite", "Diorite", "Plasmanite", "Eternium", "Titanium"}
+["PetSimulator99 - AutoMiningBlockPriorityOreMultiDropdown"] = {"Amethyst", "Rainbow", "Quartz", "Topaz", "Onyx"}, -- Options = {"Sapphire", "Ruby", "Emerald", "Amethyst", "Rainbow", "Quartz", "Topaz", "Onyx"}
+["PetSimulator99 - AutoMiningBlockPriorityChestMultiDropdown"] = {"BasicChest", "RareChest", "EpicChest"}, -- Options = {"BasicChest", "RareChest", "EpicChest"}
+["PetSimulator99 - AutoMiningBlockToggle"] = true, 
+["PetSimulator99 - AutoCompleteMiningGateQuestToggle"] = true, 
+["PetSimulator99 - AutoCompletePickaxeQuestTableMultiDropdown"] = {"World 1 (Stone Pickaxe)", "World 2 (Bronze Pickaxe)", "World 3 (Iron Pickaxe)", "World 4 (Gold Pickaxe)", "World 5 (Emerald Pickaxe)", "World 6 (Sapphire Pickaxe)", "World 7 (Ruby Pickaxe)"}, -- Options = {"World 1 (Stone Pickaxe)", "World 2 (Bronze Pickaxe)", "World 3 (Iron Pickaxe)", "World 4 (Gold Pickaxe)", "World 5 (Emerald Pickaxe)", "World 6 (Sapphire Pickaxe)", "World 7 (Ruby Pickaxe)"}
+["PetSimulator99 - AutoCompletePickaxeQuestToggle"] = true, 
+["PetSimulator99 - AutoClaimPickaxeQuestRewardToggle"] = true, 
+["PetSimulator99 - AutoBuyMiningUpgradesTableMultiDropdown"] = {"Less Pets Required To Combo Them"}, -- Options = {"Increase Tier Up Chance", "Less Pets Required To Combo Them"}
+["PetSimulator99 - AutoBuyMiningUpgradesToggle"] = true, 
+["PetSimulator99 - AutoCraftPetsTableMultiDropdown"] = {"Ruby Gem", "Emerald Gem", "Amethyst Gem", "Rainbow Gem", "Huge Mining Penguin", "Huge Crystal Spider", "Huge Fragmented Golem", "Titanic Abyss Carbuncle", "Gargantuan Hellish Axolotl"}, -- Options = {"Ruby Gem", "Emerald Gem", "Amethyst Gem", "Rainbow Gem", "Huge Mining Penguin", "Huge Crystal Spider", "Huge Fragmented Golem", "Titanic Abyss Carbuncle", "Gargantuan Hellish Axolotl"}
+["PetSimulator99 - AutoCraftPetsToggle"] = true, 
+["PetSimulator99 - AutoUseMiningCoinsBoosterToggle"] = true, 
+["PetSimulator99 - AutoUseMiningDamageBoosterToggle"] = true, 
+["PetSimulator99 - AutoUseMiningSpeedBoosterToggle"] = true, 
 ["PetSimulator99 - InfinitePetSpeedToggle"] = true, 
-["PetSimulator99 - AutoTapToggle"] = true, 
-["PetSimulator99 - AutoEfficientFarmToggle"] = true, 
-["PetSimulator99 - AutoTapModeDropdown"] = "Random", -- Options = {"Random","Nearest"}
-["PetSimulator99 - AutoCollectToggle"] = true, 
-["PetSimulator99 - AutoUseUltimateToggle"] = true, 
-["PetSimulator99 - AutoTeleportToBestAreaToggle"] = true, 
-["PetSimulator99 - AutoBuyNextAreaToggle"] = true, 
-["PetSimulator99 - AutoCompleteGateQuestToggle"] = true, 
-["PetSimulator99 - AutoRebirthToggle"] = true, 
-["PetSimulator99 - AutoTeleportToBestWorldToggle"] = true, 
-["PetSimulator99 - SelectedFlagDropdown"] = "Fortune Flag", -- Options = {"Strength Flag", "Magnet Flag", "Coins Flag", "Hasty Flag", "Diamonds Flag", "Fortune Flag", "Rainbow Flag", "Shiny Flag", "Exotic Treasure Flag"}
-["PetSimulator99 - AutoUseFlagToggle"] = true, 
-["PetSimulator99 - AutoUseBreakableSprinkler"] = true, 
-["PetSimulator99 - AutoBuyUpgradesToggle"] = true, 
-["PetSimulator99 - AutoBuyPetEquipSlotsToggle"] = true, 
-["PetSimulator99 - AutoBuyEggBundleSlotsToggle"] = true, 
 ["PetSimulator99 - DisableEggAnimationToggle"] = true, 
-["PetSimulator99 - AutoCompleteRankQuestTableMultiDropdown"] = {"Break x? breakables in best area", "Break x? breakables", "Break x? diamond breakables", "Break x? Coins", "Break x? Safes", "Break x? Presents", "Break x? comets in best area", "Break x? comets", "Break x? coin jars in best area", "Break x? coin jars", "Break x? lucky block event in best area", "Break x? pinatas in best area", "Hatch x? of your best eggs", "Hatch x? eggs", "Hatch x? rare ?? pets", "Use x? fruits", "Use x? flags", "Use x? Tier x? Potions", "Collect x? potions", "Collect x? enchants", "Upgrade to x? Tier x? Potions", "Upgrade to x? Tier x? Enchants"}, -- Options = {"Break x? breakables in best area", "Break x? breakables", "Break x? diamond breakables", "Break x? Coins", "Break x? Safes", "Break x? Presents", "Break x? comets in best area", "Break x? comets", "Break x? coin jars in best area", "Break x? coin jars", "Break x? lucky block event in best area", "Break x? pinatas in best area", "Break x? mini-chests in best area", "Break x? mini-chests", "Break x? superior mini-chests in best area", "Hatch x? of your best eggs", "Hatch x? eggs", "Hatch x? rare ?? pets", "Make x? golden pets from best egg", "Make x? rainbow pets from best egg", "Use x? fruits", "Use x? flags", "Use x? Tier x? Potions", "Collect x? potions", "Collect x? enchants", "Upgrade to x? Tier x? Potions", "Upgrade to x? Tier x? Enchants"}
-["PetSimulator99 - AutoCompleteRankQuestMaxRankValueSlider"] = 33, -- Range = {1, 33}
-["PetSimulator99 - AutoCompleteRankQuestToggle"] = true, 
-["PetSimulator99 - OpenGiftsIfNecessaryTableMultiDropdown"] = {"Gift Bag", "Large Gift Bag", "Flag Bundle", "Potion Bundle", "Enchant Bundle", "Mini Chest", "Large Enchant Bundle", "Large Potion Bundle", "Rainbow Mini Chest"}, -- Options = {"Gift Bag", "Large Gift Bag", "Flag Bundle", "Potion Bundle", "Enchant Bundle", "Mini Chest", "Large Enchant Bundle", "Large Potion Bundle", "Rainbow Mini Chest"}
-["PetSimulator99 - OpenGiftsIfNecessaryToggle"] = true, 
-["PetSimulator99 - AutoClaimMailboxToggle"] = true, 
-["PetSimulator99 - AutoClaimFreeGiftsToggle"] = true, 
-["PetSimulator99 - AutoClaimRankRewardsToggle"] = true, 
-["PetSimulator99 - AutoClaimDefaultForeverPackFreeGiftToggle"] = true, 
-["PetSimulator99 - AutoFindShinyRelicsToggle"] = true, 
-["PetSimulator99 - AutoLeaveStairwayToHeavenToggle"] = true, 
-["PetSimulator99 - FruitTableMultiDropdown"] = {"Apple", "Orange", "Banana", "Pineapple", "Watermelon", "Candycane", "Rainbow"}, -- Options = {"Apple", "Orange", "Banana", "Pineapple", "Watermelon", "Candycane", "Rainbow"}
-["PetSimulator99 - AutoEatFruitAmountSlider"] = 3, -- Range = {1, 100}
-["PetSimulator99 - AutoEatFruitTypeDropdown"] = "Normal", -- Options = {"Normal","Shiny"}
-["PetSimulator99 - AutoEatFruitToggle"] = true, 
-["PetSimulator99 - ToyTableMultiDropdown"] = {"Toy Bone", "Toy Ball", "Squeaky Toy"}, -- Options = {"Toy Bone", "Toy Ball", "Squeaky Toy"}
-["PetSimulator99 - AutoUseToyToggle"] = true, 
-["PetSimulator99 - PotionTableMultiDropdown"] = {"Coins", "Damage", "Diamonds", "Treasure Hunter"}, -- Options = {"Coins", "Damage", "Diamonds", "Treasure Hunter", "Walkspeed", "Lucky", "Huge"}
-["PetSimulator99 - AutoUsePotionToggle"] = true
 }
 
 script_key="mkSEsqrDvuOzAvUIynPCALKGwRuGZxhs";
