@@ -1,28 +1,3 @@
---Pet Simulator 99! - Mining Event Settings
-_G.ZapSettings = {
-["PetSimulator99 - AutoFarmActualMiningEggTypeDropdown"] = "Rainbow", -- Options = {"Normal", "Golden", "Rainbow"}
-["PetSimulator99 - AutoFarmActualMiningEggToggle"] = true, 
-["PetSimulator99 - AutoTeleportToBestMiningWorldToggle"] = true, 
-["PetSimulator99 - AutoBuyNextMiningAreaToggle"] = true, 
-["PetSimulator99 - AutoBuyAmethystPickaxeToggle"] = true, 
-["PetSimulator99 - AutoMiningBlockBlacklistBlockMultiDropdown"] = {}, -- Options = {"Dirt", "Stone", "Cobblestone", "Sand", "Gold", "Magma", "Obsidian", "Elderstone", "Crimsonite", "Diorite", "Plasmanite", "Eternium", "Titanium"}
-["PetSimulator99 - AutoMiningBlockPriorityOreMultiDropdown"] = {"Amethyst", "Rainbow", "Quartz", "Topaz", "Onyx"}, -- Options = {"Sapphire", "Ruby", "Emerald", "Amethyst", "Rainbow", "Quartz", "Topaz", "Onyx"}
-["PetSimulator99 - AutoMiningBlockPriorityChestMultiDropdown"] = {"BasicChest", "RareChest", "EpicChest"}, -- Options = {"BasicChest", "RareChest", "EpicChest"}
-["PetSimulator99 - AutoMiningBlockToggle"] = true, 
-["PetSimulator99 - AutoCompleteMiningGateQuestToggle"] = true, 
-["PetSimulator99 - AutoCompletePickaxeQuestTableMultiDropdown"] = {"World 1 (Stone Pickaxe)", "World 2 (Bronze Pickaxe)", "World 3 (Iron Pickaxe)", "World 4 (Gold Pickaxe)", "World 5 (Emerald Pickaxe)", "World 6 (Sapphire Pickaxe)", "World 7 (Ruby Pickaxe)"}, -- Options = {"World 1 (Stone Pickaxe)", "World 2 (Bronze Pickaxe)", "World 3 (Iron Pickaxe)", "World 4 (Gold Pickaxe)", "World 5 (Emerald Pickaxe)", "World 6 (Sapphire Pickaxe)", "World 7 (Ruby Pickaxe)"}
-["PetSimulator99 - AutoCompletePickaxeQuestToggle"] = true, 
-["PetSimulator99 - AutoClaimPickaxeQuestRewardToggle"] = true, 
-["PetSimulator99 - AutoBuyMiningUpgradesTableMultiDropdown"] = {"Less Pets Required To Combo Them"}, -- Options = {"Increase Tier Up Chance", "Less Pets Required To Combo Them"}
-["PetSimulator99 - AutoBuyMiningUpgradesToggle"] = true, 
-["PetSimulator99 - AutoCraftPetsTableMultiDropdown"] = {"Ruby Gem", "Emerald Gem", "Amethyst Gem", "Rainbow Gem", "Huge Mining Penguin", "Huge Crystal Spider", "Huge Fragmented Golem", "Titanic Abyss Carbuncle", "Gargantuan Hellish Axolotl"}, -- Options = {"Ruby Gem", "Emerald Gem", "Amethyst Gem", "Rainbow Gem", "Huge Mining Penguin", "Huge Crystal Spider", "Huge Fragmented Golem", "Titanic Abyss Carbuncle", "Gargantuan Hellish Axolotl"}
-["PetSimulator99 - AutoCraftPetsToggle"] = true, 
-["PetSimulator99 - AutoUseMiningCoinsBoosterToggle"] = true, 
-["PetSimulator99 - AutoUseMiningDamageBoosterToggle"] = true, 
-["PetSimulator99 - AutoUseMiningSpeedBoosterToggle"] = true, 
-["PetSimulator99 - InfinitePetSpeedToggle"] = true, 
-["PetSimulator99 - DisableEggAnimationToggle"] = true, 
-}
 
 script_key="mkSEsqrDvuOzAvUIynPCALKGwRuGZxhs";
 loadstring(game:HttpGet('https://zaphub.xyz/Exec'))()
