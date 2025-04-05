@@ -1,3 +1,5 @@
-
-script_key="mkSEsqrDvuOzAvUIynPCALKGwRuGZxhs";
-loadstring(game:HttpGet('https://zaphub.xyz/Exec'))()
+getgenv().AuthKey = "HUGE_5yLJBZPs9otu"
+getgenv().LoadSettings = {
+    Example_Setting = Example_Value
+}
+loadstring(game:HttpGet("https://HugeGames.io/ps99"))()
