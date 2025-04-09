@@ -1,2 +1,2 @@
-script_key = "KEY HERE"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/couldntBeT/Main/refs/heads/main/Main.lua"))()
+script_key="tldqoOYticmLjDoGNRxLYwwEfuOSZSRu"
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/d416a9fb566c94cba596550ef09d256b.lua"))()
