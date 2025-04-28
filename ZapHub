@@ -1,3 +1,4 @@
+--Pet Simulator 99!
 _G.ZapSettings = {
 ["PetSimulator99 - DisableBreakablesModelsToggle"] = true, 
 ["PetSimulator99 - DisableConfettiRenderingToggle"] = true, 
