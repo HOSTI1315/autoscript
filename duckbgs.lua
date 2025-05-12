@@ -1,4 +1,6 @@
-wait(15)
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
 
 script_key = "mphAeAwJEPKAbxQEQSWBZQFNsdPdIXOz";
 
