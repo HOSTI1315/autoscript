@@ -1,7 +1,3 @@
-if not game:IsLoaded() then
-    game.Loaded:Wait()
-end
-
 script_key = "mphAeAwJEPKAbxQEQSWBZQFNsdPdIXOz";
 
 getgenv().UserConfig = {
