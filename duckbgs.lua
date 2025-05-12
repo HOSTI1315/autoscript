@@ -1,131 +1,99 @@
---[[ 
-    Duck Hub Script for Roblox
-    Version: 1.0
-    Author: Paulvoid & Tungstrong
-    Special Thanks: sylentlys
-    Language: Vietnamese/English
-]]
-
--- Initial delay for game loading
 wait(15)
 
 script_key = "mphAeAwJEPKAbxQEQSWBZQFNsdPdIXOz";
 
--- Main configuration settings
 getgenv().UserConfig = {
-    -- Performance Settings
-    FPS                 = 15,
-    AddFriends          = false,
-    
-    -- Promo Codes
+    FPS                 = 5,
+    AddFriends          = true,
     RedeemCode = {"RELEASE", "THANKS", "update2", "sylentlyssorry", "update3"},
-    
-    -- Game Features
     EquipBestFlavorGum  = true,
     BuyFlavorGum        = true,
     AutoMinigames       = true,
     AutoRollDice        = true,
-    
-    -- Ticket System
     ["Super Ticket"]    = "Robot Claw",
     ["Use Super Ticket"] = true,
-    
-    -- Game Mechanics
-    ["Season Challenges"] = true,
-    ["Min tickets"] = "10b",
-    ["Min coins"] = "5b",
-    
-    -- Chest Settings
+    ["Season Challenges"] = true, -- True means there is a chance of getting the secret Luminosity but less hatching xxx false means there is more hatching but no luminosity 
+    ["Min tickets"] = "10b", -- Default if not set in UserConfig
+    ["Min coins"] = "5b", -- Default if not set in UserConfig
     ["Giant Chest"] = false,
     ["Void Chest"] = false,
-    ["Golden Chest"] = true,
-    ["Royal Chest"] = true,
-    
-    -- Pet Detection System
+    ["Golden Chest"] = false,
+    ["Royal Chest"] = false,
     ["Detector"] = {
         Enable = true,
         ["Name Needed"] = {"Avernus", "Patronus"},
-        ["Rarity Needed"] = {"Legendary", "Mythic", "Secret"}
+        ["Rarity Needed"] = {
+            "Legendary",
+            "Mythic",
+            "Secret"
+        }
     },
-    
-    -- Alien Shop Settings
     ["Alien Shop"] = {
         Enable = false,
         ["Min Gems"] = "1m",
         ["Items Needed"] = {
-            "Golden Key", "Mystery Box", 
-            "Coins III", "Coins IV",
-            "Lucky III", "Lucky IV",
-            "Speed III", "Speed IV"
+            "Golden Key",
+            "Mystery Box",
+            "Coins III",
+            "Coins IV",
+            "Lucky III",
+            "Lucky IV",
+            "Speed III",
+            "Speed IV"
         }
     },
-    
-    -- Black Market Settings
     ["Black Market"] = {
         Enable = false,
         ["Min Gems"] = "1m",
         ["Items Needed"] = {
-            "Lucky Evolved", "Mythic Evolved", 
-            "Speed Evolved", "Lucky V", 
-            "Mythic V", "Speed V"
+            "Lucky Evolved",
+            -- "Coins Evolved",
+            "Mythic Evolved",
+            "Speed Evolved",
+            "Lucky V",
+            -- "Coins V",
+            "Mythic V",
+            "Speed V"
         }
     },
-    
-    -- Potion Crafting
     ["Craft Potions"] = {
-        Enable = true,
+        Enable = false,
         MinGems = "100k",
         ["Potion Needed"] = {
-            {"Coins", Level = 5}, {"Speed", Level = 5},
-            {"Lucky", Level = 5}, {"Mythic", Level = 5}
+            {"Coins", Level = 5},
+            {"Speed", Level = 5},
+            {"Lucky", Level = 5},
+            {"Mythic", Level = 5}
         }
     },
-    
-    -- Mastery System
     ["Mastery"] = {
-        Pets = 17,  -- +1 Egg per hatch
-        Buffs = 21, -- Remote chest opening
-        Shops = 11  -- Required for shop purchases
+        Pets = 15,
+        Buffs = 15,
+        Shops = 10
     },
-    
-    -- Star Shop
     ["Star Shop"] = {
         Enable = true,
         MinStars = 100,
-        ["Items Needed"] = {"Speed V", "Lucky V", "Mythic V"}
-    },
-    
-    -- Rift Hunting
-    ["Rifts"] = {
-        AlwaysFindRifts = true,
-        Targets = {"Underworld Egg 3","Underworld Egg 2","Underworld Egg 1","Cyber Egg","Nightmare Egg"},
-        Luck = 5
-    },
-    
-    -- Secret Bounty
-    ["Secret Bounty"] = {"Prophet", "D0GGY1337", "Queen Kitty"},
-    
-    -- Egg Farming
-    FindDuck = "200M Egg",
-    ["Replace FindDuck"] = "Rainbow Egg",
-    ["Best Potions Find Duck"] = true,
-    
-    -- Enchantment Settings
-    ["Enchant"] = {
-        Enable = true,
-        ["Rarity Needed"] = {
-            {"Legendary", MinDifficult = "1m"},
-            "Mythic",
-            "Secret"
-        },
-        ["Reroll Needed"] = {
-            ["Team Up"] = {MinLevel = 2, HigherLevels = true}
+        ["Items Needed"] = {
+            "Speed V",
+            "Lucky V",
+            "Mythic V"
         }
     },
-    
-    -- Resource Coefficients
+    ["Rifts"] = {
+        AlwaysFindRifts = true,
+        Targets = {"Underworld Egg 3","Underworld Egg 2","Underworld Egg 1","Cyber Egg","Nightmare Egg"}, -- delete cyber egg and nightmare egg if u want
+        Luck = 5 -- dont change
+    },
+    ["Secret Bounty"] = {"Prophet", "D0GGY1337", "Queen Kitty"}, -- delete pet name if you dont want that pet
+    ["Min gems"] = "1m",
+    FindDuck = "200M Egg", -- Nightmare Egg, Common Egg, Cyber Egg
+    ["Replace FindDuck"] = "Rainbow Egg",
+    ["Best Potions Find Duck"] = false, --false if there are only few potions 
+    ["Enchant Team 1"] = {enable = true, ["team-up"] = 1},
     ["Gems coefficient"] = 1,
     ["Tickets coefficient"] = 100,
+    ["Auto Restart"] = true,
 
     DailyRewards        = true,
     ClaimIndex          = true,
@@ -158,4 +126,3 @@ getgenv().UserConfig = {
 
 -- Load the script engine
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/0cf205a620e81d1f3c3d3f75474ab32f.lua "))()
-wait(30)
