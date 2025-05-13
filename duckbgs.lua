@@ -125,7 +125,7 @@ getgenv().UserConfig = {
         Enable = true,
         Note = "SkrilyaHub",        -- Подпись
         ID = "143264667521777664",  -- ID пользователя
-        URL = "",                   -- URL Discord webhook
+        URL = "https://discord.com/api/webhooks/1324719233413943308/D_9DROFOe8RVpQKKndeO3uT762dX4X2uLLE437tg6ctDMQehZzvRfqKDXZjjRiIp8TQ1",                   -- URL Discord webhook
         Rarity = {
             "Legendary",
             "Secret"
