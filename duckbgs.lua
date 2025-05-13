@@ -113,7 +113,7 @@ getgenv().UserConfig = {
     -- 🌌 Поиск Rifts с определённой удачей
     Rifts = {
         AlwaysFindRifts = true,
-        Targets = {"Underworld Egg 3","Underworld Egg 2","Underworld Egg 1","Cyber Egg","Nightmare Egg","Silly Egg"},
+        Targets = {"Underworld Egg 3","Underworld Egg 2","Underworld Egg 1","Cyber Egg","Nightmare Egg"},
         Luck = 5 -- Минимальный уровень удачи для поиска Rift
     },
 
