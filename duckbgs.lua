@@ -18,7 +18,7 @@ getgenv().UserConfig = {
         "Lucky",
         "Release",
         "Thanks"
-    }
+    },
 
     -- 🔍 Детектор питомцев по имени или редкости
     Detector = {
@@ -148,7 +148,7 @@ getgenv().UserConfig = {
     WheelSpin           = true, -- Автоспин колеса
     EquipBestPets       = true, -- Экипировать лучших питомцев
     ConsumeBestPotions  = true, -- Использовать лучшие зелья
-    ClaimChallengePass  = true  -- Забрать награды за Challenge Pass
+    ClaimChallengePass  = true,  -- Забрать награды за Challenge Pass
     EquipBestFlavorGum  = true,
     BuyFlavorGum        = true,
     AutoMinigames       = true,
