@@ -39,7 +39,7 @@ getgenv().UserConfig = {
             {"Coins", Level = 5},
             {"Speed", Level = 5},
             {"Lucky", Level = 5},
-            {"Mythic", Level = 5}
+            {"Mythic", Level = 5},
             {"Ticket", Level = 5}
         }
     },
