@@ -156,7 +156,6 @@ getgenv().UserConfig = {
     ["Auto Restart"] = true,
     ["Super Ticket"]    = "Robot Claw",
     ["Use Super Ticket"] = true,
-    ["Season Challenges"] = true, -- True means there is a chance of getting the secret Luminosity but less hatching xxx false means there is more hatching but no luminosity 
     ["Min tickets"] = "10b", -- Default if not set in UserConfig
     ["Min coins"] = "5b", -- Default if not set in UserConfig
 }
