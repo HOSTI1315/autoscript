@@ -4,126 +4,97 @@ wait(15)
 script_key = "mphAeAwJEPKAbxQEQSWBZQFNsdPdIXOz";
 getgenv().UserConfig = {
     FPS                 = 5,
-    -- 🧑‍🤝‍🧑 Автодобавление друзей (увеличивает удачу вылупления на 10%)
-    AddFriends = true,
-
-    -- 🎁 Автоматическое использование кодов
-    RedeemCode = {
-        "Sylentlyssorry",
-        "Update3",
-        "Whoops",
-        "Throwback",
-        "Easter",
-        "Update2",
-        "Lucky",
-        "Release",
-        "Thanks"
-    },
-
-    -- 🔍 Детектор питомцев по имени или редкости
-    Detector = {
+    AddFriends          = true,
+    RedeemCode = {"RELEASE", "THANKS", "update2", "sylentlyssorry", "update3"},
+    EquipBestFlavorGum  = true,
+    BuyFlavorGum        = true,
+    AutoMinigames       = true,
+    AutoRollDice        = true,
+    ["Super Ticket"]    = "Robot Claw",
+    ["Use Super Ticket"] = true,
+    ["Season Challenges"] = true, -- True means there is a chance of getting the secret Luminosity but less hatching xxx false means there is more hatching but no luminosity 
+    ["Min tickets"] = "10b", -- Default if not set in UserConfig
+    ["Min coins"] = "5b", -- Default if not set in UserConfig
+    ["Giant Chest"] = false,
+    ["Void Chest"] = false,
+    ["Golden Chest"] = false,
+    ["Royal Chest"] = false,
+    ["Detector"] = {
         Enable = true,
-        NameNeeded = {"Avernus", "Patronus","Queen Kitty","D0GGY1337","Prophet","Wolflord","MAN FACE GOD","King Doggy","The Overlord"}, -- Поиск по имени
-        RarityNeeded = {
-            "Legendary", -- Легендарные (зелёные)
-            "Mythic",    -- Мифические (красные)
-            "Secret"     -- Секретные (жёлтые)
-        }
-    },
-
-    -- 🧪 Автокрафт зелий до заданного уровня
-    CraftPotions = {
-        Enable = true,
-        MinGems = "20m", -- Минимум гемов для крафта
-        PotionNeeded = {
-            {"Coins", Level = 5},
-            {"Speed", Level = 5},
-            {"Lucky", Level = 5},
-            {"Mythic", Level = 5},
-            {"Ticket", Level = 5}
-        }
-    },
-
-    -- 📈 Прокачка мастерства
-    Mastery = {
-        Pets = 17,  -- Уровень для автохэч 2 яиц
-        Buffs = 21, -- Уровень для удалённого открытия сундуков
-        Shops = 11,   -- Уровень магазина (0 если не нужен)
-        Minigames = 8 -- Уровень миниигр (?хз ворк)
-    },
-
-    -- ✨ Автоочарование питомцев
-    Enchant = {
-        Enable = true,
-        RarityNeeded = {
-            {"Legendary", MinDifficult = "1m"},
+        ["Name Needed"] = {"Avernus", "Patronus"},
+        ["Rarity Needed"] = {
+            "Legendary",
             "Mythic",
             "Secret"
-        },
-        RerollNeeded = {
-            TeamUp = {MinLevel = 3, HigherLevels = true} -- Только если зачарование >= 2
         }
     },
-
-    -- 👽 Покупка предметов в Alien Shop
     ["Alien Shop"] = {
-        Enable = true,
-        MinGems = "20m",
-        ItemsNeeded = {
+        Enable = false,
+        ["Min Gems"] = "1m",
+        ["Items Needed"] = {
             "Golden Key",
             "Mystery Box",
             "Coins III",
             "Coins IV",
             "Lucky III",
-            "Speed III",
             "Lucky IV",
+            "Speed III",
             "Speed IV"
         }
     },
-
-    -- 🕶️ Покупка предметов в Black Market
     ["Black Market"] = {
-        Enable = true,
-        MinGems = "20m",
-        ItemsNeeded = {
-            "Coins Evolved",
-            "Speed V",
-            "Lucky V",
-            "Coins V",
-            "Mythic V",
+        Enable = false,
+        ["Min Gems"] = "1m",
+        ["Items Needed"] = {
             "Lucky Evolved",
+            -- "Coins Evolved",
             "Mythic Evolved",
-            "Speed Evolved"
+            "Speed Evolved",
+            "Lucky V",
+            -- "Coins V",
+            "Mythic V",
+            "Speed V"
         }
     },
-
-    -- 🏆 Награды в соревнованиях (1 — верхняя, 2 — нижняя)
-    Competitive = {
-        Choosing = "2,1,1,2,1,1,2,2,1,2"
+    ["Craft Potions"] = {
+        Enable = false,
+        MinGems = "100k",
+        ["Potion Needed"] = {
+            {"Coins", Level = 5},
+            {"Speed", Level = 5},
+            {"Lucky", Level = 5},
+            {"Mythic", Level = 5}
+        }
     },
-
-    -- ⭐ Обмен звёзд в Star Shop (из Daily Rewards)
+    ["Mastery"] = {
+        Pets = 15,
+        Buffs = 15,
+        Shops = 10
+    },
     ["Star Shop"] = {
         Enable = true,
-        MinStars = "300",
-        ItemsNeeded = {
-            "Mystery Box"
+        MinStars = 100,
+        ["Items Needed"] = {
+            "Speed V",
+            "Lucky V",
+            "Mythic V"
         }
     },
-
-    -- 🌌 Поиск Rifts с определённой удачей
-    Rifts = {
+    ["Rifts"] = {
         AlwaysFindRifts = true,
-        Targets = {"Underworld Egg 3","Underworld Egg 2","Underworld Egg 1","Cyber Egg","Nightmare Egg"},
-        Luck = 5 -- Минимальный уровень удачи для поиска Rift
+        Targets = {"Underworld Egg 3","Underworld Egg 2","Underworld Egg 1","Cyber Egg","Nightmare Egg"}, -- delete cyber egg and nightmare egg if u want
+        Luck = 5 -- dont change
     },
-
-    -- 🥚 Яйцо по умолчанию, если нет нужных Rifts
-    FindDuck = "Cyber Egg",
-
-    -- Поиск секретки?
-    ["Secret Bounty"] = {"Avernus", "Patronus","Queen Kitty","D0GGY1337","Prophet","Wolflord","MAN FACE GOD","King Doggy","The Overlord"},
-    -- 📬 Настройка webhook для уведомлений
+    ["Secret Bounty"] = {"Prophet", "D0GGY1337", "Queen Kitty"}, -- delete pet name if you dont want that pet
+    ["Min gems"] = "1m",
+    FindDuck = "200M Egg", -- Nightmare Egg, Common Egg, Cyber Egg
+    ["Replace FindDuck"] = "Rainbow Egg",
+    ["Best Potions Find Duck"] = false, --false if there are only few potions 
+    ["Enchant Team 1"] = {enable = true, ["team-up"] = 1},
+    ["Gems coefficient"] = 1,
+    ["Tickets coefficient"] = 100,
+    ["Auto Restart"] = true,
+    
     Webhook = {
         Enable = true,
         Note = "SkrilyaHub",        -- Подпись
