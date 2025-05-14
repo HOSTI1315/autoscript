@@ -5,7 +5,18 @@ script_key = "mphAeAwJEPKAbxQEQSWBZQFNsdPdIXOz";
 getgenv().UserConfig = {
     FPS                 = 5,
     AddFriends          = true,
-    RedeemCode = {"RELEASE", "THANKS", "update2", "sylentlyssorry", "update3"},
+    RedeemCode = {
+        "Sylentlyssorry",
+        "Update3",
+        "Whoops",
+        "Throwback",
+        "Easter",
+        "Update2",
+        "Lucky",
+        "Release",
+        "Thanks"
+    },
+    
     EquipBestFlavorGum  = true,
     BuyFlavorGum        = true,
     AutoMinigames       = true,
@@ -21,7 +32,7 @@ getgenv().UserConfig = {
     ["Royal Chest"] = false,
     ["Detector"] = {
         Enable = true,
-        ["Name Needed"] = {"Avernus", "Patronus"},
+        ["Name Needed"] = {"Avernus", "Patronus","Queen Kitty","D0GGY1337","Prophet","Wolflord","MAN FACE GOD","King Doggy","The Overlord"}, -- Поиск по имени
         ["Rarity Needed"] = {
             "Legendary",
             "Mythic",
@@ -82,15 +93,15 @@ getgenv().UserConfig = {
     },
     ["Rifts"] = {
         AlwaysFindRifts = true,
-        Targets = {"Underworld Egg 3","Underworld Egg 2","Underworld Egg 1","Cyber Egg","Nightmare Egg"}, -- delete cyber egg and nightmare egg if u want
+        Targets = {"Avernus", "Patronus","Queen Kitty","D0GGY1337","Prophet","Wolflord","MAN FACE GOD","King Doggy","The Overlord"}, -- Поиск по имени
         Luck = 5 -- dont change
     },
     ["Secret Bounty"] = {"Prophet", "D0GGY1337", "Queen Kitty"}, -- delete pet name if you dont want that pet
     ["Min gems"] = "1m",
     FindDuck = "200M Egg", -- Nightmare Egg, Common Egg, Cyber Egg
-    ["Replace FindDuck"] = "Rainbow Egg",
-    ["Best Potions Find Duck"] = false, --false if there are only few potions 
-    ["Enchant Team 1"] = {enable = true, ["team-up"] = 1},
+    ["Replace FindDuck"] = "Cyber Egg",
+    ["Best Potions Find Duck"] = true, --false if there are only few potions 
+    ["Enchant Team 1"] = {enable = true, ["team-up"] = 3},
     ["Gems coefficient"] = 1,
     ["Tickets coefficient"] = 100,
     ["Auto Restart"] = true,
