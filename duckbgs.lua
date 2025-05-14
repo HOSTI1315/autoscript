@@ -121,6 +121,8 @@ getgenv().UserConfig = {
     -- 🥚 Яйцо по умолчанию, если нет нужных Rifts
     FindDuck = "Cyber Egg",
 
+    -- Поиск секретки?
+    ["Secret Bounty"] = {"Avernus", "Patronus","Queen Kitty","D0GGY1337","Prophet","Wolflord","MAN FACE GOD","King Doggy","The Overlord"},
     -- 📬 Настройка webhook для уведомлений
     Webhook = {
         Enable = true,
@@ -156,8 +158,6 @@ getgenv().UserConfig = {
     ["Auto Restart"] = true,
     ["Super Ticket"]    = "Robot Claw",
     ["Use Super Ticket"] = true,
-    ["Min tickets"] = "10b", -- Default if not set in UserConfig
-    ["Min coins"] = "5b", -- Default if not set in UserConfig
 }
 
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/0cf205a620e81d1f3c3d3f75474ab32f.lua"))()
