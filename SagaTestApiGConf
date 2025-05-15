@@ -164,7 +164,7 @@ local function AutoStart()
         [5] = config.AutoStartStory[3],
         [6] = true,
     }
-    ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsCreate))
+    game:GetService("ReplicatedStorage").Event.JoinRoom:FireServer(unpack(argsCreate))
     task.wait(0.5)
     local argsTeleport = {
         [1] = "TeleGameplay",
@@ -174,7 +174,7 @@ local function AutoStart()
         [5] = config.AutoStartStory[3],
         [6] = true,
     }
-    ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsTeleport))
+    game:GetService("ReplicatedStorage").Event.JoinRoom:FireServer(unpack(argsTeleport))
 end
 AutoStart()
 
