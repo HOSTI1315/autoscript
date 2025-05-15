@@ -381,41 +381,82 @@ local function pressKeysSequence()
 end
 task.spawn(pressKeysSequence)
 
+local function checkRaidTime()
+    local systemFolder = workspace:FindFirstChild("Sytem") -- Обратите внимание: не "System", а "Sytem"
+    if not systemFolder then return false end
+
+    local timeFolder = systemFolder:FindFirstChild("Time")
+    if not timeFolder then return false end
+
+    local sec = timeFolder:FindFirstChild("Sec")
+    local min = timeFolder:FindFirstChild("Min")
+
+    if not sec or not min then return false end
+    if not sec:IsA("NumberValue") or not min:IsA("NumberValue") then return false end
+
+    warn("Текущее время: Минуты =", min.Value, "Секунды =", sec.Value) -- Логирование времени
+    return sec.Value <= 0 and min.Value <= 0
+end
+
 -- главный цикл фарма
 task.spawn(function()
     local noMobsTime = 0
+
     while true do
         local mob = getClosestMob()
+
         if mob then
             noMobsTime = 0
+            -- Ваш код для обработки мобов
             local stopSignal = { stop = false }
             local conn = hoverAbove(mob.HumanoidRootPart, stopSignal)
             local tween = flyToTarget(mob.HumanoidRootPart.Position, 1.5)
             tween:Play()
             tween.Completed:Wait()
+
             while mob.Humanoid.Health > 0 and mob.Parent do
                 task.wait(0.2)
             end
+
             stopSignal.stop = true
             conn:Disconnect()
 
-            -- Для Infinity мода: вызываем следующего моба
+            -- Для Infinity мода
             if config.AutoStartStory and config.AutoStartStory[1] == "I" then
-                local remote = game:GetService("Players").LocalPlayer
-                    .PlayerGui.RoomUi.Ready.Frame.StartButton.Butom.LocalScript.RemoteEvent
-                remote:FireServer()
+                local remote = player.PlayerGui.RoomUi.Ready.Frame.StartButton.Butom.LocalScript.RemoteEvent
+                if remote and remote:IsA("RemoteEvent") then
+                    remote:FireServer()
+                end
             end
         else
             noMobsTime = noMobsTime + 0.5
-            if noMobsTime >= restartInterval then
-                if config.AutoNext then
-                    ReplicatedStorage.Events.WinEvent.Buttom:FireServer("NextLv")
-                elseif config.AutoReplay then
-                    ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
-                end
-                noMobsTime = 0
-            end
         end
+
+        -- Проверка времени только для режима Raid
+        local timeUp = false
+        if config.AutoStartStory and config.AutoStartStory[1] == "R" then
+            timeUp = checkRaidTime()
+        end
+
+        -- Триггер действия
+        if timeUp or noMobsTime >= restartInterval then
+            warn("Срабатывает перезапуск: TimeUp =", timeUp, "noMobsTime =", noMobsTime)
+
+            -- Проверка RemoteEvent
+            local remote = ReplicatedStorage.Events.WinEvent.Buttom
+            if remote and remote:IsA("RemoteEvent") then
+                if config.AutoNext then
+                    remote:FireServer("NextLv")
+                elseif config.AutoReplay then
+                    remote:FireServer("RPlay")
+                end
+            else
+                warn("RemoteEvent 'Buttom' не найден или не является RemoteEvent")
+            end
+
+            noMobsTime = 0
+        end
+
         task.wait(0.5)
     end
 end)
