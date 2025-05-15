@@ -151,25 +151,48 @@ else
     end
 end
 
--- Автостарт Story
-local function AutoStart()
-    local argsCreate = { … }
-    game:GetService("ReplicatedStorage").Event.JoinRoom:FireServer(unpack(argsCreate))
+-- Автостарт Story + Ready
+local function AutoStartAndReady()
+    -- 1) Создаём комнату и телепорт
+    local argsCreate = {
+        [1] = "Create",     [2] = "Story",
+        [3] = config.AutoStartStory[1],
+        [4] = config.AutoStartStory[2],
+        [5] = config.AutoStartStory[3],
+        [6] = true,
+    }
+    ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsCreate))
     task.wait(0.5)
-    local argsTeleport = { … }
-    game:GetService("ReplicatedStorage").Event.JoinRoom:FireServer(unpack(argsTeleport))
+    local argsTeleport = {
+        [1] = "TeleGameplay", [2] = "Story",
+        [3] = config.AutoStartStory[1],
+        [4] = config.AutoStartStory[2],
+        [5] = config.AutoStartStory[3],
+        [6] = true,
+    }
+    ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsTeleport))
+
+    -- 2) Ждём появления RoomUi
+    local roomUi = playerGui:WaitForChild("RoomUi", 10)
+    if not roomUi then
+        warn("[SkrilyaHub] Не удалось дождаться RoomUi")
+        return
+    end
+
+    -- 3) Нажимаем кнопку Ready
+    local readyFrame = roomUi:FindFirstChild("Ready")
+    if readyFrame and readyFrame.Frame and readyFrame.Frame:FindFirstChild("StartButton") then
+        local btn = readyFrame.Frame.StartButton
+        local ls  = btn:FindFirstChild("Butom") and btn.Butom:FindFirstChild("LocalScript")
+        if ls and ls:FindFirstChild("RemoteEvent") then
+            ls.RemoteEvent:FireServer()
+        end
+    end
 end
 
-wait(0.5)
+-- Запуск автозапуска с готовностью
+AutoStartAndReady()
 
--- Автовызов Ready-кнопки
-game:GetService("Players")
-    .LocalPlayer.PlayerGui
-    .RoomUi.Ready.Frame
-    .StartButton.Butom.LocalScript
-    .RemoteEvent:FireServer()
-
-AutoStart()
 
 
 -- Handle win (Replay or Next)
