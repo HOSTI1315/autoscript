@@ -1,5 +1,5 @@
 getgenv().UserConfig = {
-    AutoStartStory = {"R", 1, 1, 1},
+    AutoStartStory = {"S", 1, 1, 1},
     KillAura = { OffsetY = 0, HoverRadius = 4, HoverSpeed = 5 },
     RestartIfNoMobsAfter = 5,
     KeyUse = {
