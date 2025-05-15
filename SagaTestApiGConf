@@ -131,15 +131,39 @@ local configName = "SkrilyaHub_Config.json"
 
 if placeId == 17850641257 then
     -- 1) Сохраняем Gems/Gold/Trait
+    local function getInventoryCountByName(targetName)
+        local scrolling = playerGui:FindFirstChild("Window")
+            and playerGui.Window.Inventory.Frame.Frame4.Frame1.Scrolling
+    
+        if not scrolling then return "N/A" end
+    
+        for _, item in ipairs(scrolling:GetChildren()) do
+            local block = item:FindFirstChild("Frame")
+            local nameLabel = block and block:FindFirstChild("BlockName")
+            if nameLabel and nameLabel:IsA("TextLabel") then
+                if nameLabel.Text == targetName then
+                    local numLabel = block:FindFirstChild("Number")
+                    if numLabel and numLabel:IsA("TextLabel") then
+                        return numLabel.Text
+                    end
+                end
+            end
+        end
+    
+        return "N/A"
+    end
+
     local data = {
         Gems  = safeGet(playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.Frame.Gems.Gems.TextLabel or {Text="N/A"}),
         Gold  = safeGet(playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.Frame.Gems.Gold.TextLabel or {Text="N/A"}),
-        Trait = safeGet(playerGui:FindFirstChild("Window") and playerGui.Window.Trait.Frame.main.item.number or {Text="N/A"}),
+        Ticket      = getInventoryCountByName("Ticket"),
+        TraitReroll = getInventoryCountByName("Trait Reroll")
     }
     writefile(configName, HttpService:JSONEncode(data))
     addGrayText("Gems: "  .. data.Gems)
     addGrayText("Gold: "  .. data.Gold)
-    addGrayText("Trait: " .. data.Trait)
+    addGrayText("Trait Reroll: " .. data.TraitReroll)
+    addGrayText("Tickets: "      .. data.Ticket)
     addGrayText("Config saved")
 
     -- 2) Запускаем автостарт + Ready спустя 2 секунды
@@ -195,9 +219,10 @@ else
     if isfile(configName) then
         local loaded = HttpService:JSONDecode(readfile(configName))
         addGrayText("Loaded from config:")
-        addGrayText("Gems: "  .. loaded.Gems)
-        addGrayText("Gold: "  .. loaded.Gold)
-        addGrayText("Trait: " .. loaded.Trait)
+        addGrayText("Gems: "  .. data.Gems)
+        addGrayText("Gold: "  .. data.Gold)
+        addGrayText("Trait Reroll: " .. data.TraitReroll)
+        addGrayText("Tickets: "      .. data.Ticket)
     else
         addGrayText("Config not found")
     end
@@ -239,7 +264,7 @@ do
         end
 
         -- Если не получилось, ждём секунду и пробуем снова
-        task.wait(1)
+        task.wait(2)
     end
 
     if not success then
@@ -310,7 +335,6 @@ local function pressKeysSequence()
 end
 task.spawn(pressKeysSequence)
 
--- главный цикл фарма
 -- главный цикл фарма
 task.spawn(function()
     local noMobsTime = 0
