@@ -151,9 +151,6 @@ else
     end
 end
 
--- Автовызов Ready-кнопки
-game:GetService("Players").LocalPlayer.PlayerGui.RoomUi.Ready.Frame.StartButton.Butom.LocalScript.RemoteEvent:FireServer()
-
 -- Автостарт Story
 local function AutoStart()
     local argsCreate = {
@@ -176,6 +173,12 @@ local function AutoStart()
     }
     game:GetService("ReplicatedStorage").Event.JoinRoom:FireServer(unpack(argsTeleport))
 end
+-- Автовызов Ready-кнопки
+game:GetService("Players")
+    .LocalPlayer.PlayerGui
+    .RoomUi.Ready.Frame
+    .StartButton.Butom.LocalScript
+    .RemoteEvent:FireServer()
 AutoStart()
 
 -- Handle win (Replay or Next)
