@@ -132,19 +132,31 @@ local configName = "SkrilyaHub_Config.json"
 if placeId == 17850641257 then
     -- 1) Сохраняем Gems/Gold/Trait
     local function getInventoryCountByName(targetName)
-        local scrolling = playerGui:FindFirstChild("Window")
-            and playerGui.Window.Inventory.Frame.Frame4.Frame1.Scrolling
+        local window = playerGui:FindFirstChild("Window")
+        if not window then return "N/A" end
     
+        local inventory = window:FindFirstChild("Inventory")
+        if not inventory then return "N/A" end
+    
+        local frame4 = inventory.Frame and inventory.Frame:FindFirstChild("Frame4")
+        if not frame4 then return "N/A" end
+    
+        local frame1 = frame4:FindFirstChild("Frame1")
+        if not frame1 then return "N/A" end
+    
+        local scrolling = frame1:FindFirstChild("Scrolling")
         if not scrolling then return "N/A" end
     
         for _, item in ipairs(scrolling:GetChildren()) do
-            local block = item:FindFirstChild("Frame")
-            local nameLabel = block and block:FindFirstChild("BlockName")
-            if nameLabel and nameLabel:IsA("TextLabel") then
-                if nameLabel.Text == targetName then
-                    local numLabel = block:FindFirstChild("Number")
-                    if numLabel and numLabel:IsA("TextLabel") then
-                        return numLabel.Text
+            if item:IsA("Frame") then
+                local block = item:FindFirstChild("Frame")
+                if block then
+                    local nameLabel = block:FindFirstChild("BlockName")
+                    if nameLabel and nameLabel:IsA("TextLabel") and nameLabel.Text == targetName then
+                        local numLabel = block:FindFirstChild("Number")
+                        if numLabel and numLabel:IsA("TextLabel") then
+                            return numLabel.Text
+                        end
                     end
                 end
             end
@@ -154,10 +166,10 @@ if placeId == 17850641257 then
     end
 
     local data = {
-        Gems  = safeGet(playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.Frame.Gems.Gems.TextLabel or {Text="N/A"}),
-        Gold  = safeGet(playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.Frame.Gems.Gold.TextLabel or {Text="N/A"}),
+        Gems        = safeGetText(playerGui, "ScreenGui", "Frame", "Gems", "Gems", "TextLabel"),
+        Gold        = safeGetText(playerGui, "ScreenGui", "Frame", "Gems", "Gold", "TextLabel"),
         Ticket      = getInventoryCountByName("Ticket"),
-        TraitReroll = getInventoryCountByName("Trait Reroll")
+        TraitReroll = getInventoryCountByName("Trait Reroll"),
     }
     writefile(configName, HttpService:JSONEncode(data))
     addGrayText("Gems: "  .. data.Gems)
@@ -219,10 +231,10 @@ else
     if isfile(configName) then
         local loaded = HttpService:JSONDecode(readfile(configName))
         addGrayText("Loaded from config:")
-        addGrayText("Gems: "  .. data.Gems)
-        addGrayText("Gold: "  .. data.Gold)
-        addGrayText("Trait Reroll: " .. data.TraitReroll)
-        addGrayText("Tickets: "      .. data.Ticket)
+        addGrayText("Gems: "  .. (loaded.Gems or "N/A"))
+        addGrayText("Gold: "  .. (loaded.Gold or "N/A"))
+        addGrayText("Trait Reroll: " .. (loaded.TraitReroll or "N/A"))
+        addGrayText("Tickets: "      .. (loaded.Ticket or "N/A"))
     else
         addGrayText("Config not found")
     end
