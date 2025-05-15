@@ -244,6 +244,23 @@ if placeId == 17850641257 then
         AutoStartAndReady()
     end)
 else
+        -- === Безопасное получение текста из вложенного элемента UI ===
+    local function safeGetText(...)
+        local args = {...}
+        local parent = table.remove(args, 1)
+        for i, name in ipairs(args) do
+            if not parent or not parent:FindFirstChild(name) then
+                return "N/A"
+            end
+            parent = parent[name]
+        end
+        if parent:IsA("TextLabel") or parent:IsA("TextButton") or parent:IsA("TextBox") then
+            return parent.Text
+        else
+            return "N/A"
+        end
+    end
+
     -- Здесь загрузка конфиг-файла для любых других placeId
     if isfile(configName) then
         local loaded = HttpService:JSONDecode(readfile(configName))
