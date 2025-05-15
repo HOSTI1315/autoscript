@@ -127,87 +127,87 @@ local function safeGet(path)
 end
 
 -- Конфиг сохранения/загрузки (если нужно)
+-- === Работа с конфигом + автостарт Story & Ready только в нужном плейсе ===
 local configName = "SkrilyaHub_Config.json"
+
 if placeId == 17850641257 then
+    -- 1) Сохраняем Gems/Gold/Trait
     local data = {
         Gems  = safeGet(playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.Frame.Gems.Gems.TextLabel or {Text="N/A"}),
         Gold  = safeGet(playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.Frame.Gems.Gold.TextLabel or {Text="N/A"}),
         Trait = safeGet(playerGui:FindFirstChild("Window") and playerGui.Window.Trait.Frame.main.item.number or {Text="N/A"}),
     }
     writefile(configName, HttpService:JSONEncode(data))
-    addGrayText("Gems: "..data.Gems)
-    addGrayText("Gold: "..data.Gold)
-    addGrayText("Trait: "..data.Trait)
+    addGrayText("Gems: "  .. data.Gems)
+    addGrayText("Gold: "  .. data.Gold)
+    addGrayText("Trait: " .. data.Trait)
     addGrayText("Config saved")
+
+    -- 2) Запускаем автостарт Story + Ready спустя 2 секунды
+    task.delay(2, function()
+        -- Автостарт Story + Ready
+        local function AutoStartAndReady()
+            -- a) Создаём комнату и телепорт
+            local argsCreate = {
+                [1] = "Create",     [2] = "Story",
+                [3] = config.AutoStartStory[1],
+                [4] = config.AutoStartStory[2],
+                [5] = config.AutoStartStory[3],
+                [6] = true,
+            }
+            ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsCreate))
+            task.wait(0.5)
+            local argsTeleport = {
+                [1] = "TeleGameplay", [2] = "Story",
+                [3] = config.AutoStartStory[1],
+                [4] = config.AutoStartStory[2],
+                [5] = config.AutoStartStory[3],
+                [6] = true,
+            }
+            ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsTeleport))
+
+            -- b) Ждём RoomUi и нажимаем Ready
+            local roomUi = playerGui:WaitForChild("RoomUi", 10)
+            if not roomUi then
+                warn("[SkrilyaHub] RoomUi не появился")
+                return
+            end
+
+            local readyFrame = roomUi:FindFirstChild("Ready")
+            if readyFrame and readyFrame.Frame and readyFrame.Frame:FindFirstChild("StartButton") then
+                local btn = readyFrame.Frame.StartButton
+                local ls  = btn:FindFirstChild("Butom") and btn.Butom:FindFirstChild("LocalScript")
+                local ev  = ls and ls:FindFirstChild("RemoteEvent")
+                if ev then ev:FireServer() end
+            end
+        end
+
+        AutoStartAndReady()
+    end)
 else
+    -- Только загрузка конфига в любом другом плейсе
     if isfile(configName) then
-        local data = HttpService:JSONDecode(readfile(configName))
+        local loaded = HttpService:JSONDecode(readfile(configName))
         addGrayText("Loaded from config:")
-        addGrayText("Gems: "..data.Gems)
-        addGrayText("Gold: "..data.Gold)
-        addGrayText("Trait: "..data.Trait)
+        addGrayText("Gems: "  .. loaded.Gems)
+        addGrayText("Gold: "  .. loaded.Gold)
+        addGrayText("Trait: " .. loaded.Trait)
     else
         addGrayText("Config not found")
     end
 end
 
--- Автостарт Story + Ready
-local function AutoStartAndReady()
-    -- 1) Создаём комнату и телепорт
-    local argsCreate = {
-        [1] = "Create",     [2] = "Story",
-        [3] = config.AutoStartStory[1],
-        [4] = config.AutoStartStory[2],
-        [5] = config.AutoStartStory[3],
-        [6] = true,
-    }
-    ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsCreate))
-    task.wait(0.5)
-    local argsTeleport = {
-        [1] = "TeleGameplay", [2] = "Story",
-        [3] = config.AutoStartStory[1],
-        [4] = config.AutoStartStory[2],
-        [5] = config.AutoStartStory[3],
-        [6] = true,
-    }
-    ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsTeleport))
-
-    -- 2) Ждём появления RoomUi
-    local roomUi = playerGui:WaitForChild("RoomUi", 10)
-    if not roomUi then
-        warn("[SkrilyaHub] Не удалось дождаться RoomUi")
-        return
-    end
-
-    -- 3) Нажимаем кнопку Ready
-    local readyFrame = roomUi:FindFirstChild("Ready")
-    if readyFrame and readyFrame.Frame and readyFrame.Frame:FindFirstChild("StartButton") then
-        local btn = readyFrame.Frame.StartButton
-        local ls  = btn:FindFirstChild("Butom") and btn.Butom:FindFirstChild("LocalScript")
-        if ls and ls:FindFirstChild("RemoteEvent") then
-            ls.RemoteEvent:FireServer()
-        end
-    end
-end
-
--- Запуск автозапуска с готовностью
-AutoStartAndReady()
-
-
-
--- Handle win (Replay or Next)
-local function HandleWin()
-    local event = ReplicatedStorage.Events.WinEvent.Buttom
-    if config.AutoNext then
-        event:FireServer("NextLv")
-    elseif config.AutoReplay then
-        event:FireServer("RPlay")
-    end
-end
-
--- Auto kill aura
+-- === Auto kill aura + авто-перезапуск или Next ===
 local character = player.Character or player.CharacterAdded:Wait()
-local hrp = character:WaitForChild("HumanoidRootPart")
+local hrp       = character:WaitForChild("HumanoidRootPart")
+
+-- читаем из конфига
+local offsetY       = config.KillAura.OffsetY
+local hoverRadius   = config.KillAura.HoverRadius
+local hoverSpeed    = config.KillAura.HoverSpeed
+local restartInterval = config.RestartIfNoMobsAfter
+
+-- создаём «платформу» под игроком
 local platform = Instance.new("Part")
 platform.Size        = Vector3.new(15,1,15)
 platform.Anchored    = true
@@ -215,61 +215,91 @@ platform.CanCollide  = false
 platform.Transparency= 0.5
 platform.Parent      = workspace
 RunService.Heartbeat:Connect(function()
-    platform.CFrame = hrp.CFrame * CFrame.new(0,-2,0)
+    platform.CFrame = hrp.CFrame * CFrame.new(0, -2, 0)
 end)
 
+-- поиск ближайшего моба
 local function getClosestMob()
     for _, mob in ipairs(workspace.Enemy.Mob:GetChildren()) do
-        if mob:IsA("Model") and mob:FindFirstChild("Humanoid") and mob.Humanoid.Health>0 and mob:FindFirstChild("HumanoidRootPart") then
+        if mob:IsA("Model")
+        and mob:FindFirstChild("Humanoid")
+        and mob.Humanoid.Health > 0
+        and mob:FindFirstChild("HumanoidRootPart") then
             return mob
         end
     end
+    return nil
 end
 
-local function hoverAbove(target, stop)
+-- полёт к цели
+local function flyToTarget(pos, duration)
+    return TweenService:Create(hrp, TweenInfo.new(duration, Enum.EasingStyle.Sine), {
+        CFrame = CFrame.new(pos.X, hrp.Position.Y, pos.Z)
+    })
+end
+
+-- зависание над мобом
+local function hoverAbove(targetPart, stopSignal)
     local angle = 0
     return RunService.Heartbeat:Connect(function(dt)
-        if stop.stop then return end
-        angle = angle + dt * config.KillAura.HoverSpeed
-        local x = math.cos(angle) * config.KillAura.HoverRadius
-        local z = math.sin(angle) * config.KillAura.HoverRadius
-        hrp.CFrame = CFrame.new(target.Position + Vector3.new(x, config.KillAura.OffsetY, z), target.Position)
+        if stopSignal.stop then return end
+        angle = angle + dt * hoverSpeed
+        local x = math.cos(angle) * hoverRadius
+        local z = math.sin(angle) * hoverRadius
+        hrp.CFrame = CFrame.new(targetPart.Position + Vector3.new(x, offsetY, z), targetPart.Position)
     end)
 end
 
-local function pressKey(code, dur)
-    VirtualInputManager:SendKeyEvent(true, code, false, nil)
-    task.wait(dur or 0.1)
-    VirtualInputManager:SendKeyEvent(false, code, false, nil)
+-- нажатие клавиш по конфигу
+local function pressKey(keyCode, duration)
+    VirtualInputManager:SendKeyEvent(true, keyCode, false, nil)
+    task.wait(duration or 0.1)
+    VirtualInputManager:SendKeyEvent(false, keyCode, false, nil)
 end
 
 local function pressKeysSequence()
-    while task.wait(1) do
+    while true do
         for _, keyData in ipairs(config.KeyUse) do
-            for i=1, keyData[2] do pressKey(keyData[1]) task.wait(0.1) end
+            for i = 1, keyData[2] do
+                pressKey(keyData[1])
+                task.wait(0.1)
+            end
         end
+        task.wait(0.5)
     end
 end
-spawn(pressKeysSequence)
+task.spawn(pressKeysSequence)
 
-spawn(function()
+-- главный цикл фарма
+task.spawn(function()
     local noMobsTime = 0
-    while task.wait(0.5) do
+    while true do
         local mob = getClosestMob()
         if mob then
             noMobsTime = 0
-            local stop = { stop = false }
-            local conn = hoverAbove(mob.HumanoidRootPart, stop)
-            while mob.Humanoid.Health>0 and mob.Parent do task.wait(0.2) end
-            stop.stop = true
+            local stopSignal = { stop = false }
+            local conn = hoverAbove(mob.HumanoidRootPart, stopSignal)
+            local tween = flyToTarget(mob.HumanoidRootPart.Position, 1.5)
+            tween:Play()
+            tween.Completed:Wait()
+            while mob.Humanoid.Health > 0 and mob.Parent do
+                task.wait(0.2)
+            end
+            stopSignal.stop = true
             conn:Disconnect()
         else
             noMobsTime = noMobsTime + 0.5
-            if noMobsTime >= config.RestartIfNoMobsAfter then
-                HandleWin()
+            if noMobsTime >= restartInterval then
+                -- вместо жёсткого RPlay — выбираем Next или Replay
+                if config.AutoNext then
+                    ReplicatedStorage.Events.WinEvent.Buttom:FireServer("NextLv")
+                elseif config.AutoReplay then
+                    ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
+                end
                 noMobsTime = 0
             end
         end
+        task.wait(0.5)
     end
 end)
 
