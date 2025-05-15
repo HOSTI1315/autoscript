@@ -343,6 +343,7 @@ task.spawn(function()
     end
 end)
 
+
 -- Упрощение сцены
 local function removeTextures(root)
     for _, c in ipairs(root:GetDescendants()) do
