@@ -207,6 +207,12 @@ local hoverRadius   = config.KillAura.HoverRadius
 local hoverSpeed    = config.KillAura.HoverSpeed
 local restartInterval = config.RestartIfNoMobsAfter
 
+game:GetService("Players")
+    .LocalPlayer.PlayerGui
+    .RoomUi.Ready.Frame
+    .StartButton.Butom.LocalScript
+    .RemoteEvent:FireServer()
+
 -- создаём «платформу» под игроком
 local platform = Instance.new("Part")
 platform.Size        = Vector3.new(15,1,15)
