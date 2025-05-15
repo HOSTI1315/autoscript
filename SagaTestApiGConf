@@ -1,0 +1,284 @@
+-- === SkrilyaHub Main Script ===
+wait(15)
+
+-- === Конфигурация ===
+-- Дефолтные значения
+local config = {
+    AutoStartStory      = {1, 1, 1},    -- {Mode, Level, Difficulty}
+    KillAura = {
+        OffsetY     = 0,
+        HoverRadius = 5,
+        HoverSpeed  = 2,
+    },
+    RestartIfNoMobsAfter = 3,            -- секунд до перезапуска
+    KeyUse = {                           -- последовательность нажатий
+        {Enum.KeyCode.ButtonX, 4},
+        {Enum.KeyCode.Z,       1},
+        {Enum.KeyCode.ButtonX, 4},
+        {Enum.KeyCode.ButtonX, 1},
+        {Enum.KeyCode.ButtonX, 4},
+        {Enum.KeyCode.C,       1},
+    },
+    AutoReplay          = true,         -- автоматическое повторение
+    AutoNext            = false,        -- перейти к следующему уровню
+}
+
+-- Переопределение из getgenv().UserConfig
+if getgenv().UserConfig then
+    for k, v in pairs(getgenv().UserConfig) do
+        if typeof(v) == "table" and typeof(config[k]) == "table" then
+            for subKey, subVal in pairs(v) do
+                config[k][subKey] = subVal
+            end
+        else
+            config[k] = v
+        end
+    end
+end
+
+-- Получаем сервисы
+local Players           = game:GetService("Players")
+local HttpService       = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService      = game:GetService("TweenService")
+local RunService        = game:GetService("RunService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+-- Переменные игрока и GUI
+local player    = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local placeId   = game.PlaceId
+
+-- === Создаём свой ScreenGui ===
+local gui = Instance.new("ScreenGui")
+gui.Name           = "SkrilyaHubOverlay"
+gui.ResetOnSpawn   = false
+gui.IgnoreGuiInset = true
+gui.Parent         = playerGui
+
+local blackFrame = Instance.new("Frame")
+blackFrame.Size            = UDim2.new(1,0,1,0)
+blackFrame.Position        = UDim2.new(0,0,0,0)
+blackFrame.BackgroundColor3= Color3.new(0,0,0)
+blackFrame.BorderSizePixel = 0
+blackFrame.Parent          = gui
+
+local listLayout = Instance.new("UIListLayout")
+listLayout.SortOrder           = Enum.SortOrder.LayoutOrder
+listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+listLayout.VerticalAlignment   = Enum.VerticalAlignment.Center
+listLayout.Padding             = UDim.new(0,10)
+listLayout.Parent              = blackFrame
+
+local title = Instance.new("TextLabel")
+title.Size                   = UDim2.new(1,0,0,60)
+title.BackgroundTransparency = 1
+title.Text                   = "SkrilyaHub"
+title.TextColor3             = Color3.new(1,1,1)
+title.Font                   = Enum.Font.GothamBlack
+title.TextScaled             = true
+title.LayoutOrder            = 1
+title.Parent                 = blackFrame
+
+local toggleBtn = Instance.new("TextButton")
+toggleBtn.Name                   = "ToggleBlackScreenButton"
+toggleBtn.Size                   = UDim2.new(0,180,0,40)
+toggleBtn.Position               = UDim2.new(0.5,-90,1,-50)
+toggleBtn.AnchorPoint            = Vector2.new(0.5,0)
+toggleBtn.BackgroundColor3       = Color3.fromRGB(50,50,50)
+toggleBtn.BorderSizePixel        = 0
+toggleBtn.BackgroundTransparency = 0.2
+toggleBtn.Text                   = "On/Off Black Screen"
+toggleBtn.Font                   = Enum.Font.GothamBold
+toggleBtn.TextSize               = 18
+toggleBtn.TextColor3             = Color3.new(1,1,1)
+toggleBtn.Parent                 = gui
+
+local isBlackVisible = true
+toggleBtn.MouseButton1Click:Connect(function()
+    isBlackVisible = not isBlackVisible
+    blackFrame.Visible = isBlackVisible
+end)
+toggleBtn.MouseEnter:Connect(function()
+    toggleBtn.BackgroundTransparency = 0
+end)
+toggleBtn.MouseLeave:Connect(function()
+    toggleBtn.BackgroundTransparency = 0.2
+end)
+
+local orderCounter = 2
+local function addGrayText(text)
+    local lbl = Instance.new("TextLabel")
+    lbl.Size                   = UDim2.new(1,-40,0,25)
+    lbl.BackgroundTransparency = 1
+    lbl.Text                   = text
+    lbl.TextColor3             = Color3.fromRGB(180,180,180)
+    lbl.Font                   = Enum.Font.Gotham
+    lbl.TextSize               = 20
+    lbl.TextXAlignment         = Enum.TextXAlignment.Center
+    lbl.LayoutOrder            = orderCounter
+    lbl.Parent                 = blackFrame
+    orderCounter = orderCounter + 1
+end
+
+local function safeGet(path)
+    local ok,val = pcall(function() return path.Text end)
+    return ok and val or "N/A"
+end
+
+-- Конфиг сохранения/загрузки (если нужно)
+local configName = "SkrilyaHub_Config.json"
+if placeId == 17850641257 then
+    local data = {
+        Gems  = safeGet(playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.Frame.Gems.Gems.TextLabel or {Text="N/A"}),
+        Gold  = safeGet(playerGui:FindFirstChild("ScreenGui") and playerGui.ScreenGui.Frame.Gems.Gold.TextLabel or {Text="N/A"}),
+        Trait = safeGet(playerGui:FindFirstChild("Window") and playerGui.Window.Trait.Frame.main.item.number or {Text="N/A"}),
+    }
+    writefile(configName, HttpService:JSONEncode(data))
+    addGrayText("Gems: "..data.Gems)
+    addGrayText("Gold: "..data.Gold)
+    addGrayText("Trait: "..data.Trait)
+    addGrayText("Config saved")
+else
+    if isfile(configName) then
+        local data = HttpService:JSONDecode(readfile(configName))
+        addGrayText("Loaded from config:")
+        addGrayText("Gems: "..data.Gems)
+        addGrayText("Gold: "..data.Gold)
+        addGrayText("Trait: "..data.Trait)
+    else
+        addGrayText("Config not found")
+    end
+end
+
+-- Автовызов Ready-кнопки
+game:GetService("Players").LocalPlayer.PlayerGui.RoomUi.Ready.Frame.StartButton.Butom.LocalScript.RemoteEvent:FireServer()
+
+-- Автостарт Story
+local function AutoStart()
+    local argsCreate = {
+        [1] = "Create",
+        [2] = "Story",
+        [3] = config.AutoStartStory[1],
+        [4] = config.AutoStartStory[2],
+        [5] = config.AutoStartStory[3],
+        [6] = true,
+    }
+    ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsCreate))
+    task.wait(0.5)
+    local argsTeleport = {
+        [1] = "TeleGameplay",
+        [2] = "Story",
+        [3] = config.AutoStartStory[1],
+        [4] = config.AutoStartStory[2],
+        [5] = config.AutoStartStory[3],
+        [6] = true,
+    }
+    ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsTeleport))
+end
+AutoStart()
+
+-- Handle win (Replay or Next)
+local function HandleWin()
+    local event = ReplicatedStorage.Events.WinEvent.Buttom
+    if config.AutoNext then
+        event:FireServer("NextLv")
+    elseif config.AutoReplay then
+        event:FireServer("RPlay")
+    end
+end
+
+-- Auto kill aura
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+local platform = Instance.new("Part")
+platform.Size        = Vector3.new(15,1,15)
+platform.Anchored    = true
+platform.CanCollide  = false
+platform.Transparency= 0.5
+platform.Parent      = workspace
+RunService.Heartbeat:Connect(function()
+    platform.CFrame = hrp.CFrame * CFrame.new(0,-2,0)
+end)
+
+local function getClosestMob()
+    for _, mob in ipairs(workspace.Enemy.Mob:GetChildren()) do
+        if mob:IsA("Model") and mob:FindFirstChild("Humanoid") and mob.Humanoid.Health>0 and mob:FindFirstChild("HumanoidRootPart") then
+            return mob
+        end
+    end
+end
+
+local function hoverAbove(target, stop)
+    local angle = 0
+    return RunService.Heartbeat:Connect(function(dt)
+        if stop.stop then return end
+        angle = angle + dt * config.KillAura.HoverSpeed
+        local x = math.cos(angle) * config.KillAura.HoverRadius
+        local z = math.sin(angle) * config.KillAura.HoverRadius
+        hrp.CFrame = CFrame.new(target.Position + Vector3.new(x, config.KillAura.OffsetY, z), target.Position)
+    end)
+end
+
+local function pressKey(code, dur)
+    VirtualInputManager:SendKeyEvent(true, code, false, nil)
+    task.wait(dur or 0.1)
+    VirtualInputManager:SendKeyEvent(false, code, false, nil)
+end
+
+local function pressKeysSequence()
+    while task.wait(1) do
+        for _, keyData in ipairs(config.KeyUse) do
+            for i=1, keyData[2] do pressKey(keyData[1]) task.wait(0.1) end
+        end
+    end
+end
+spawn(pressKeysSequence)
+
+spawn(function()
+    local noMobsTime = 0
+    while task.wait(0.5) do
+        local mob = getClosestMob()
+        if mob then
+            noMobsTime = 0
+            local stop = { stop = false }
+            local conn = hoverAbove(mob.HumanoidRootPart, stop)
+            while mob.Humanoid.Health>0 and mob.Parent do task.wait(0.2) end
+            stop.stop = true
+            conn:Disconnect()
+        else
+            noMobsTime = noMobsTime + 0.5
+            if noMobsTime >= config.RestartIfNoMobsAfter then
+                HandleWin()
+                noMobsTime = 0
+            end
+        end
+    end
+end)
+
+-- Упрощение сцены
+local function removeTextures(root)
+    for _, c in ipairs(root:GetDescendants()) do
+        if c:IsA("Texture") or c:IsA("Decal") then c:Destroy() end
+    end
+end
+
+local function simplifyToGrayCubes(root)
+    for _, obj in ipairs(root:GetDescendants()) do
+        if obj:IsA("SurfaceAppearance") or obj:IsA("Texture") or obj:IsA("Decal") then
+            obj:Destroy()
+        elseif obj:IsA("MeshPart") then
+            local cube = Instance.new("Part")
+            cube.Size, cube.CFrame, cube.Anchored, cube.CanCollide = obj.Size, obj.CFrame, obj.Anchored, obj.CanCollide
+            cube.Parent = obj.Parent
+            obj:Destroy()
+        elseif obj:IsA("BasePart") then
+            obj.Material, obj.Color, obj.Reflectance, obj.Transparency, obj.Shape = Enum.Material.Plastic, Color3.fromRGB(128,128,128), 0, 0, Enum.PartType.Block
+        end
+    end
+end
+
+simplifyToGrayCubes(workspace)
+removeTextures(workspace)
+
+print("[SkrilyaHub] Конфигурация загружена успешно.")
