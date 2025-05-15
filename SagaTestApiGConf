@@ -153,33 +153,24 @@ end
 
 -- Автостарт Story
 local function AutoStart()
-    local argsCreate = {
-        [1] = "Create",
-        [2] = "Story",
-        [3] = config.AutoStartStory[1],
-        [4] = config.AutoStartStory[2],
-        [5] = config.AutoStartStory[3],
-        [6] = true,
-    }
+    local argsCreate = { … }
     game:GetService("ReplicatedStorage").Event.JoinRoom:FireServer(unpack(argsCreate))
     task.wait(0.5)
-    local argsTeleport = {
-        [1] = "TeleGameplay",
-        [2] = "Story",
-        [3] = config.AutoStartStory[1],
-        [4] = config.AutoStartStory[2],
-        [5] = config.AutoStartStory[3],
-        [6] = true,
-    }
+    local argsTeleport = { … }
     game:GetService("ReplicatedStorage").Event.JoinRoom:FireServer(unpack(argsTeleport))
 end
+
+wait(0.5)
+
 -- Автовызов Ready-кнопки
 game:GetService("Players")
     .LocalPlayer.PlayerGui
     .RoomUi.Ready.Frame
     .StartButton.Butom.LocalScript
     .RemoteEvent:FireServer()
+
 AutoStart()
+
 
 -- Handle win (Replay or Next)
 local function HandleWin()
