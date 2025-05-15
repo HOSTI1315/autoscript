@@ -127,7 +127,6 @@ local function safeGet(path)
 end
 
 -- Конфиг сохранения/загрузки (если нужно)
--- === Работа с конфигом + автостарт Story & Ready только в нужном плейсе ===
 local configName = "SkrilyaHub_Config.json"
 
 if placeId == 17850641257 then
@@ -143,36 +142,43 @@ if placeId == 17850641257 then
     addGrayText("Trait: " .. data.Trait)
     addGrayText("Config saved")
 
-    -- 2) Запускаем автостарт Story + Ready спустя 2 секунды
+    -- 2) Запускаем автостарт + Ready спустя 2 секунды
     task.delay(2, function()
-        -- Автостарт Story + Ready
         local function AutoStartAndReady()
-            -- a) Создаём комнату и телепорт
+            -- Вычисляем текст режима по config.AutoStartStory[1]
+            local modeKey  = config.AutoStartStory[1]
+            local modeMap  = { S = "Story", R = "Raid", I = "Inf", Inf = "Inf", Infinity = "Inf" }
+            local modeText = modeMap[tostring(modeKey)] or tostring(modeKey)
+
+            -- a) Создаём комнату
             local argsCreate = {
-                [1] = "Create",     [2] = "Story",
-                [3] = config.AutoStartStory[1],
-                [4] = config.AutoStartStory[2],
-                [5] = config.AutoStartStory[3],
+                [1] = "Create",
+                [2] = modeText,
+                [3] = config.AutoStartStory[2],
+                [4] = config.AutoStartStory[3],
+                [5] = config.AutoStartStory[4],
                 [6] = true,
             }
             ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsCreate))
             task.wait(0.5)
+
+            -- b) Телепортируемся
             local argsTeleport = {
-                [1] = "TeleGameplay", [2] = "Story",
-                [3] = config.AutoStartStory[1],
-                [4] = config.AutoStartStory[2],
-                [5] = config.AutoStartStory[3],
+                [1] = "TeleGameplay",
+                [2] = modeText,
+                [3] = config.AutoStartStory[2],
+                [4] = config.AutoStartStory[3],
+                [5] = config.AutoStartStory[4],
                 [6] = true,
             }
             ReplicatedStorage.Event.JoinRoom:FireServer(unpack(argsTeleport))
 
-            -- b) Ждём RoomUi и нажимаем Ready
+            -- c) Ждём RoomUi и нажимаем Ready
             local roomUi = playerGui:WaitForChild("RoomUi", 10)
             if not roomUi then
                 warn("[SkrilyaHub] RoomUi не появился")
                 return
             end
-
             local readyFrame = roomUi:FindFirstChild("Ready")
             if readyFrame and readyFrame.Frame and readyFrame.Frame:FindFirstChild("StartButton") then
                 local btn = readyFrame.Frame.StartButton
@@ -185,7 +191,7 @@ if placeId == 17850641257 then
         AutoStartAndReady()
     end)
 else
-    -- Только загрузка конфига в любом другом плейсе
+    -- Здесь загрузка конфиг-файла для любых других placeId
     if isfile(configName) then
         local loaded = HttpService:JSONDecode(readfile(configName))
         addGrayText("Loaded from config:")
@@ -207,11 +213,39 @@ local hoverRadius   = config.KillAura.HoverRadius
 local hoverSpeed    = config.KillAura.HoverSpeed
 local restartInterval = config.RestartIfNoMobsAfter
 
-game:GetService("Players")
-    .LocalPlayer.PlayerGui
-    .RoomUi.Ready.Frame
-    .StartButton.Butom.LocalScript
-    .RemoteEvent:FireServer()
+-- Нажимаем Ready с максимум 3 попыток, затем пропускаем
+do
+    local attempts = 0
+    local success = false
+
+    while attempts < 3 do
+        attempts = attempts + 1
+
+        -- Проверяем, что GUI точно существует
+        local roomUi = playerGui:FindFirstChild("RoomUi")
+        local readyFrame = roomUi and roomUi:FindFirstChild("Ready")
+        local btn = readyFrame and readyFrame.Frame and readyFrame.Frame:FindFirstChild("StartButton")
+        local ls  = btn and btn:FindFirstChild("Butom") and btn.Butom:FindFirstChild("LocalScript")
+        local ev  = ls and ls:FindFirstChild("RemoteEvent")
+
+        if ev then
+            local ok, err = pcall(function()
+                ev:FireServer()
+            end)
+            if ok then
+                success = true
+                break
+            end
+        end
+
+        -- Если не получилось, ждём секунду и пробуем снова
+        task.wait(1)
+    end
+
+    if not success then
+        warn("[SkrilyaHub] Не удалось нажать кнопку Ready после 3 попыток, пропуск...")
+    end
+end
 
 -- создаём «платформу» под игроком
 local platform = Instance.new("Part")
