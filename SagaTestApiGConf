@@ -311,6 +311,7 @@ end
 task.spawn(pressKeysSequence)
 
 -- главный цикл фарма
+-- главный цикл фарма
 task.spawn(function()
     local noMobsTime = 0
     while true do
@@ -327,10 +328,16 @@ task.spawn(function()
             end
             stopSignal.stop = true
             conn:Disconnect()
+
+            -- Для Infinity мода: вызываем следующего моба
+            if config.AutoStartStory and config.AutoStartStory[1] == "I" then
+                local remote = game:GetService("Players").LocalPlayer
+                    .PlayerGui.RoomUi.Ready.Frame.StartButton.Butom.LocalScript.RemoteEvent
+                remote:FireServer()
+            end
         else
             noMobsTime = noMobsTime + 0.5
             if noMobsTime >= restartInterval then
-                -- вместо жёсткого RPlay — выбираем Next или Replay
                 if config.AutoNext then
                     ReplicatedStorage.Events.WinEvent.Buttom:FireServer("NextLv")
                 elseif config.AutoReplay then
@@ -342,7 +349,6 @@ task.spawn(function()
         task.wait(0.5)
     end
 end)
-
 
 -- Упрощение сцены
 local function removeTextures(root)
