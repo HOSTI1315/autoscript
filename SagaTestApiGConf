@@ -438,6 +438,12 @@ task.spawn(function()
             timeUp = checkRaidTime()
         end
 
+        if tick() - lastUpdateTime > 630 then
+            warn("Принудительный перезапуск через 630 секунд")
+            ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
+            lastUpdateTime = tick()
+        end
+        
         -- Триггер действия
         if timeUp or noMobsTime >= restartInterval then
             warn("Срабатывает перезапуск: TimeUp =", timeUp, "noMobsTime =", noMobsTime)
