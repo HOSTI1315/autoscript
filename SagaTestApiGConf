@@ -456,12 +456,21 @@ task.spawn(function()
             -- считаем, сколько секунд нет мобов
             noMobsTime = noMobsTime + 0.2
         end
-
-        -- Проверяем оба условия рестарта:
-        -- 1) нет мобов дольше RestartIfNoMobsAfter
-        -- 2) таймер закончился и RestartOnTimerEnd == true
+        
         local timeUp = config.RestartOnTimerEnd and checkRaidTime()
-        if noMobsTime >= config.RestartIfNoMobsAfter or timeUp then
+        
+        -- Проверяем либо/либо
+        local shouldRestart = false
+        
+        if config.RestartOnTimerEnd then
+            -- Только по окончанию таймера
+            shouldRestart = timeUp
+        else
+            -- Только по отсутствию мобов
+            shouldRestart = noMobsTime >= config.RestartIfNoMobsAfter
+        end
+        
+        if shouldRestart then
             warn(string.format(
                 "[SkrilyaHub] Триггер рестарта: noMobsTime=%.1f, timeUp=%s",
                 noMobsTime, tostring(timeUp)
