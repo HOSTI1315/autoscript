@@ -407,65 +407,53 @@ task.spawn(function()
 
         if mob then
             noMobsTime = 0
-            -- Ваш код для обработки мобов
-            local stopSignal = { stop = false }
-            local conn = hoverAbove(mob.HumanoidRootPart, stopSignal)
-            local tween = flyToTarget(mob.HumanoidRootPart.Position, 1.5)
-            tween:Play()
-            tween.Completed:Wait()
+            local flyTween = flyToTarget(mob.HumanoidRootPart.Position, 0.5)
+            flyTween:Play()
+            flyTween.Completed:Wait()
 
-            while mob.Humanoid.Health > 0 and mob.Parent do
+            local stopSignal = { stop = false }
+            local hoverConn = hoverAbove(mob.HumanoidRootPart, stopSignal)
+
+            repeat
                 task.wait(0.2)
-            end
+            until mob.Humanoid.Health <= 0 or not mob.Parent
 
             stopSignal.stop = true
-            conn:Disconnect()
-
-            -- Для Infinity мода
-            if config.AutoStartStory and config.AutoStartStory[1] == "I" then
-                local remote = player.PlayerGui.RoomUi.Ready.Frame.StartButton.Butom.LocalScript.RemoteEvent
-                if remote and remote:IsA("RemoteEvent") then
-                    remote:FireServer()
-                end
-            end
+            hoverConn:Disconnect()
         else
-            noMobsTime = noMobsTime + 0.5
-        end
+            noMobsTime += 0.2
+            if noMobsTime >= restartInterval then
+                warn("[SkrilyaHub] Врагов не найдено в течение", restartInterval, "секунд.")
 
-        -- Проверка времени только для режима Raid
-        local timeUp = false
-        if config.AutoStartStory and config.AutoStartStory[1] == "R" then
-            timeUp = checkRaidTime()
-        end
+                -- Проверка времени
+                if checkRaidTime() then
+                    warn("[SkrilyaHub] Время истекло!")
 
-        if tick() - lastUpdateTime > 630 then
-            warn("Принудительный перезапуск через 630 секунд")
-            ReplicatedStorage.Events.WinEvent.Buttom:FireServer("RPlay")
-            lastUpdateTime = tick()
-        end
-        
-        -- Триггер действия
-        if timeUp or noMobsTime >= restartInterval then
-            warn("Срабатывает перезапуск: TimeUp =", timeUp, "noMobsTime =", noMobsTime)
+                    local function clickButton(name)
+                        local btn = playerGui:FindFirstChild("Result") and playerGui.Result:FindFirstChild(name)
+                        if btn and btn:IsA("TextButton") then
+                            btn:Activate()
+                            warn("[SkrilyaHub] Нажал на кнопку:", name)
+                        else
+                            warn("[SkrilyaHub] Кнопка не найдена:", name)
+                        end
+                    end
 
-            -- Проверка RemoteEvent
-            local remote = ReplicatedStorage.Events.WinEvent.Buttom
-            if remote and remote:IsA("RemoteEvent") then
-                if config.AutoNext then
-                    remote:FireServer("NextLv")
-                elseif config.AutoReplay then
-                    remote:FireServer("RPlay")
+                    if config.AutoNext then
+                        clickButton("Next")
+                    elseif config.AutoReplay then
+                        clickButton("Replay")
+                    end
+
+                    break -- выходим из цикла фарма после конца раунда
                 end
-            else
-                warn("RemoteEvent 'Buttom' не найден или не является RemoteEvent")
             end
-
-            noMobsTime = 0
         end
 
-        task.wait(0.5)
+        task.wait(0.2)
     end
 end)
+
 
 -- Удаление текстур и декалей
 local function removeTextures(root)
