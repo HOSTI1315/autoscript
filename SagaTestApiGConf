@@ -400,7 +400,6 @@ local function checkRaidTime()
 end
 
 -- главный цикл фарма
--- главный цикл фарма
 task.spawn(function()
     local noMobsTime = 0
 
@@ -408,15 +407,33 @@ task.spawn(function()
         local mob = getClosestMob()
 
         if mob then
+            -- Сбрасываем счётчик, когда mob найден
             noMobsTime = 0
-            -- … логика полёта и убийства …
+
+            -- Полёт к мобу и убийство
+            local flyTween = flyToTarget(mob.HumanoidRootPart.Position, 1.5)
+            flyTween:Play()
+            flyTween.Completed:Wait()
+
+            local stopSignal = { stop = false }
+            local hoverConn  = hoverAbove(mob.HumanoidRootPart, stopSignal)
+
+            -- Ждём, пока моб жив
+            repeat
+                task.wait(0.2)
+            until mob.Humanoid.Health <= 0 or not mob.Parent
+
+            -- Останавливаем hover
+            stopSignal.stop = true
+            hoverConn:Disconnect()
         else
+            -- Увеличиваем таймер отсутствия мобов
             noMobsTime = noMobsTime + 0.2
         end
 
         -- Проверяем оба условия рестарта:
-        -- 1) нет мобов дольше config.RestartIfNoMobsAfter
-        -- 2) таймер закончился и config.RestartOnTimerEnd == true
+        -- 1) нет мобов дольше RestartIfNoMobsAfter
+        -- 2) таймер закончился и RestartOnTimerEnd == true
         local timeUp = config.RestartOnTimerEnd and checkRaidTime()
         if noMobsTime >= config.RestartIfNoMobsAfter or timeUp then
             warn(string.format(
@@ -443,6 +460,7 @@ task.spawn(function()
         task.wait(0.2)
     end
 end)
+
 
 -- Удаление текстур и декалей
 local function removeTextures(root)
