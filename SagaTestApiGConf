@@ -383,32 +383,11 @@ end
 task.spawn(pressKeysSequence)
 
 local function checkRaidTime()
-    local systemFolder = workspace:FindFirstChild("Sytem")
-    if not systemFolder then
-        warn("[checkRaidTime] workspace.Sytem not found")
-        return false
-    end
-
-    local timeFolder = systemFolder:FindFirstChild("Time")
-    if not timeFolder then
-        warn("[checkRaidTime] Sytem.Time not found")
-        return false
-    end
-
-    local sec = timeFolder:FindFirstChild("Sec")
-    local min = timeFolder:FindFirstChild("Min")
-
-    if not sec or not min then
-        warn("[checkRaidTime] Sec or Min not found")
-        return false
-    end
-    if not sec:IsA("NumberValue") or not min:IsA("NumberValue") then
-        warn("[checkRaidTime] Sec or Min is not NumberValue")
-        return false
-    end
-
-    warn("Текущее время: Минуты =", min.Value, "Секунды =", sec.Value)
-    return sec.Value <= 0 and min.Value <= 0
+    local minVal = workspace.Sytem.Time.Min.Value
+    local secVal = workspace.Sytem.Time.Sec.Value
+    
+    -- Время закончилось, если минуты и секунды равны нулю
+    return (minVal == 0 and secVal == 0)
 end
 
 -- главный цикл фарма
