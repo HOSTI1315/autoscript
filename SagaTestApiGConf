@@ -428,19 +428,29 @@ task.spawn(function()
             hoverConn:Disconnect()
 
             -- Infinity: после убийства сразу шлём команду на спавн следующего босса
-            if tostring(config.AutoStartStory[1]) == "I" then
-                game:GetService("Players")
-                    .LocalPlayer
-                    .PlayerGui
-                    .RoomUi
-                    .NextF
-                    .Frame
-                    .StartButton
-                    .Ready
-                    .LocalScript
-                    .RemoteEvent
-                    :FireServer()
+            local modeKey = tostring(config.AutoStartStory[1]):upper()
+            if modeKey == "I" or modeKey == "INF" or modeKey == "INFINITY" then
+                -- ждём, что RoomUi и NextF появятся (таймаут 5 секунд)
+                local roomUi = player.PlayerGui:WaitForChild("RoomUi", 5)
+                local nextF  = roomUi and roomUi:WaitForChild("NextF", 5)
+                if nextF then
+                    -- внутри NextF: Frame → StartButton → Ready → LocalScript → RemoteEvent
+                    local ok, err = pcall(function()
+                        nextF.Frame
+                             .StartButton
+                             .Ready
+                             .LocalScript
+                             .RemoteEvent
+                             :FireServer()
+                    end)
+                    if not ok then
+                        warn("[SkrilyaHub] Не удалось вызвать NextF.RemoteEvent:", err)
+                    end
+                else
+                    warn("[SkrilyaHub] Infinity mode: NextF GUI не появился за 5 секунд")
+                end
             end
+
 
         else
             -- считаем, сколько секунд нет мобов
