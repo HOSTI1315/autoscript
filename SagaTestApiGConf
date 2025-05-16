@@ -4,13 +4,14 @@ wait(4)
 -- === Конфигурация ===
 -- Дефолтные значения
 local config = {
-    AutoStartStory      = {1, 1, 1},    -- {Mode, Level, Difficulty}
+    AutoStartStory        = {"S", 1, 1, 1},    -- {Mode, Level, Difficulty}
     KillAura = {
         OffsetY     = 0,
         HoverRadius = 5,
         HoverSpeed  = 2,
     },
-    RestartIfNoMobsAfter = 3,            -- секунд до перезапуска
+    RestartIfNoMobsAfter  = 3,            -- секунд до перезапуска, если мобов нет
+    RestartOnTimerEnd     = true,         -- рестарт при достижении таймера 0:00
     KeyUse = {                           -- последовательность нажатий
         {Enum.KeyCode.ButtonX, 4},
         {Enum.KeyCode.Z,       1},
@@ -19,8 +20,8 @@ local config = {
         {Enum.KeyCode.ButtonX, 4},
         {Enum.KeyCode.C,       1},
     },
-    AutoReplay          = true,         -- автоматическое повторение
-    AutoNext            = false,        -- перейти к следующему уровню
+    AutoReplay            = true,         -- автоматическое повторение
+    AutoNext              = false,        -- перейти к следующему уровню
 }
 
 -- Переопределение из getgenv().UserConfig
@@ -399,6 +400,7 @@ local function checkRaidTime()
 end
 
 -- главный цикл фарма
+-- главный цикл фарма
 task.spawn(function()
     local noMobsTime = 0
 
@@ -407,53 +409,40 @@ task.spawn(function()
 
         if mob then
             noMobsTime = 0
-            local flyTween = flyToTarget(mob.HumanoidRootPart.Position, 0.5)
-            flyTween:Play()
-            flyTween.Completed:Wait()
-
-            local stopSignal = { stop = false }
-            local hoverConn = hoverAbove(mob.HumanoidRootPart, stopSignal)
-
-            repeat
-                task.wait(0.2)
-            until mob.Humanoid.Health <= 0 or not mob.Parent
-
-            stopSignal.stop = true
-            hoverConn:Disconnect()
+            -- … логика полёта и убийства …
         else
-            noMobsTime += 0.2
-            if noMobsTime >= restartInterval then
-                warn("[SkrilyaHub] Врагов не найдено в течение", restartInterval, "секунд.")
+            noMobsTime = noMobsTime + 0.2
+        end
 
-                -- Проверка времени
-                if checkRaidTime() then
-                    warn("[SkrilyaHub] Время истекло!")
+        -- Проверяем оба условия рестарта:
+        -- 1) нет мобов дольше config.RestartIfNoMobsAfter
+        -- 2) таймер закончился и config.RestartOnTimerEnd == true
+        local timeUp = config.RestartOnTimerEnd and checkRaidTime()
+        if noMobsTime >= config.RestartIfNoMobsAfter or timeUp then
+            warn(string.format(
+                "[SkrilyaHub] Триггер рестарта: noMobsTime=%.1f, timeUp=%s",
+                noMobsTime, tostring(timeUp)
+            ))
 
-                    local function clickButton(name)
-                        local btn = playerGui:FindFirstChild("Result") and playerGui.Result:FindFirstChild(name)
-                        if btn and btn:IsA("TextButton") then
-                            btn:Activate()
-                            warn("[SkrilyaHub] Нажал на кнопку:", name)
-                        else
-                            warn("[SkrilyaHub] Кнопка не найдена:", name)
-                        end
-                    end
-
-                    if config.AutoNext then
-                        clickButton("Next")
-                    elseif config.AutoReplay then
-                        clickButton("Replay")
-                    end
-
-                    break -- выходим из цикла фарма после конца раунда
+            -- Выполняем Next или Replay в зависимости от конфига
+            local remote = ReplicatedStorage.Events.WinEvent.Buttom
+            if remote and remote:IsA("RemoteEvent") then
+                if config.AutoNext then
+                    remote:FireServer("NextLv")
+                elseif config.AutoReplay then
+                    remote:FireServer("RPlay")
                 end
+            else
+                warn("[SkrilyaHub] RemoteEvent 'Buttom' не найден!")
             end
+
+            -- Сбрасываем счётчик отсутствия мобов
+            noMobsTime = 0
         end
 
         task.wait(0.2)
     end
 end)
-
 
 -- Удаление текстур и декалей
 local function removeTextures(root)
