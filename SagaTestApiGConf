@@ -469,39 +469,35 @@ end)
 
 -- Удаление текстур и декалей
 local function removeTextures(root)
-    for _, c in ipairs(root:GetDescendants()) do
+    for _, c in pairs(root:GetDescendants()) do
         if c:IsA("Texture") or c:IsA("Decal") then
             c:Destroy()
         end
     end
 end
 
--- Упрощение всех частей в серые кубы
 local function simplifyToGrayCubes(root)
-    for _, obj in ipairs(root:GetDescendants()) do
-        if obj:IsA("SurfaceAppearance") or obj:IsA("Texture") or obj:IsA("Decal") then
+    for _, obj in pairs(root:GetDescendants()) do
+        if obj:IsA("Texture") or obj:IsA("Decal") or obj:IsA("SurfaceAppearance") then
             obj:Destroy()
-
-        elseif obj:IsA("MeshPart") then
-            local cube = Instance.new("Part")
-            cube.Size = obj.Size
-            cube.CFrame = obj.CFrame
-            cube.Anchored = obj.Anchored
-            cube.CanCollide = obj.CanCollide
-            cube.Material = Enum.Material.Plastic
-            cube.Color = Color3.fromRGB(128, 128, 128)
-            cube.Parent = obj.Parent
-            obj:Destroy()
-
-        elseif obj:IsA("BasePart") and not obj:IsA("Terrain") then
-            obj.Material = Enum.Material.Plastic
-            obj.Color = Color3.fromRGB(128, 128, 128)
-            obj.Reflectance = 0
-            obj.Transparency = 0
-            -- Shape оставляем только для Part и UnionOperation
-            if obj:IsA("Part") then
-                obj.Shape = Enum.PartType.Block
+        elseif obj:IsA("SpecialMesh") or obj:IsA("FileMesh") or obj:IsA("MeshPart") then
+            if obj:IsA("MeshPart") then
+                local cube = Instance.new("Part")
+                cube.Size       = obj.Size
+                cube.CFrame     = obj.CFrame
+                cube.Anchored   = obj.Anchored
+                cube.CanCollide = obj.CanCollide
+                cube.Parent     = obj.Parent
+                obj:Destroy()
+            else
+                obj:Destroy()
             end
+        elseif obj:IsA("BasePart") then
+            obj.Material    = Enum.Material.Plastic
+            obj.Color       = Color3.fromRGB(128, 128, 128)
+            obj.Reflectance = 0
+            obj.Transparency= 0
+            obj.Shape       = Enum.PartType.Block
         end
     end
 end
