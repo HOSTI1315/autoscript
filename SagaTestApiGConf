@@ -423,11 +423,27 @@ task.spawn(function()
                 task.wait(0.2)
             until mob.Humanoid.Health <= 0 or not mob.Parent
 
-            -- Останавливаем hover
+            -- останавливаем hover
             stopSignal.stop = true
             hoverConn:Disconnect()
+
+            -- Infinity: после убийства сразу шлём команду на спавн следующего босса
+            if tostring(config.AutoStartStory[1]) == "I" then
+                game:GetService("Players")
+                    .LocalPlayer
+                    .PlayerGui
+                    .RoomUi
+                    .NextF
+                    .Frame
+                    .StartButton
+                    .Ready
+                    .LocalScript
+                    .RemoteEvent
+                    :FireServer()
+            end
+
         else
-            -- Увеличиваем таймер отсутствия мобов
+            -- считаем, сколько секунд нет мобов
             noMobsTime = noMobsTime + 0.2
         end
 
