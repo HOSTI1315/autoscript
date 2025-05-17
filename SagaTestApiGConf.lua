@@ -356,15 +356,38 @@ local function flyToTarget(pos, duration)
     })
 end
 
--- зависание над мобом
-local function hoverAbove(targetPart, stopSignal)
+-- Получение высоты пола под точкой
+local function getGroundYAtPosition(pos)
+    local rayOrigin = pos + Vector3.new(0, 10, 0)
+    local rayDirection = Vector3.new(0, -100, 0)
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {workspace}
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    raycastParams.IgnoreWater = true
+
+    local result = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
+    if result then
+        return result.Position.Y
+    else
+        return pos.Y -- если пол не найден — остаёмся на текущей высоте
+    end
+end
+
+-- Движение по кругу на уровне земли
+local function walkAroundOnGround(targetPart, stopSignal)
     local angle = 0
+    local radius = config.KillAura.HoverRadius or 5
+    local speed = config.KillAura.HoverSpeed or 2
+    local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+
     return RunService.Heartbeat:Connect(function(dt)
-        if stopSignal.stop then return end
-        angle = angle + dt * hoverSpeed
-        local x = math.cos(angle) * hoverRadius
-        local z = math.sin(angle) * hoverRadius
-        hrp.CFrame = CFrame.new(targetPart.Position + Vector3.new(x, offsetY, z), targetPart.Position)
+        if stopSignal.stop or not hrp then return end
+        angle = angle + dt * speed
+        local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
+        local pos = targetPart.Position + offset
+        local groundY = getGroundYAtPosition(pos)
+        local finalPos = Vector3.new(pos.X, groundY + 2, pos.Z) -- 2 — небольшой отступ от земли
+        hrp.CFrame = CFrame.new(finalPos, targetPart.Position)
     end)
 end
 
@@ -409,7 +432,7 @@ task.spawn(function()
             shouldPressKeys = true -- начали атаковать, можно жать клавиши
 
             local stopSignal = { stop = false }
-            local hoverConn = hoverAbove(mob.HumanoidRootPart, stopSignal)
+            local hoverConn = walkAroundOnGround(mob.HumanoidRootPart, stopSignal)
 
             repeat
                 task.wait(0.2)
