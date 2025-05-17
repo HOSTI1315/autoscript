@@ -524,14 +524,38 @@ local function reportMatchResults()
         local rewardText = {}
         for _, rewardFrame in pairs(rewards:GetChildren()) do
             if rewardFrame:IsA("Frame") then
-                local label = rewardFrame:FindFirstChildOfClass("TextLabel")
-                local nameModel = rewardFrame:FindFirstDescendantWhichIsA("Model")
-                if label and nameModel then
-                    table.insert(rewardText, string.format("+%s [%s]", label.Text, nameModel.Name))
+                local amountLabel = rewardFrame:FindFirstChildWhichIsA("TextLabel")
+                local name = nil
+    
+                -- Попытка получить название из WorldModel
+                local blockImage = rewardFrame:FindFirstChild("BlockImage")
+                if blockImage and blockImage:FindFirstChild("WorldModel") then
+                    local worldModel = blockImage.WorldModel
+                    for _, obj in ipairs(worldModel:GetChildren()) do
+                        if obj:IsA("Model") or obj:IsA("MeshPart") then
+                            name = obj.Name
+                            break
+                        end
+                    end
+                end
+    
+                -- Если нет WorldModel — берём имя одного из известных ресурсов
+                if not name then
+                    for _, child in ipairs(rewardFrame:GetChildren()) do
+                        if child:IsA("Frame") and (child.Name == "Gems" or child.Name == "TraitReroll" or child.Name == "Gold" or child.Name == "Tickets") then
+                            name = child.Name
+                            break
+                        end
+                    end
+                end
+    
+                -- Добавляем, если оба значения есть
+                if name and amountLabel then
+                    table.insert(rewardText, string.format("+%s [%s]", amountLabel.Text, name))
                 end
             end
         end
-
+    
         if #rewardText > 0 then
             table.insert(fields, {
                 name = "🎁 Rewards",
@@ -540,6 +564,7 @@ local function reportMatchResults()
             })
         end
     end
+
 
     sendWebhookEmbed("🎮 Match Results", "Вот результаты последней игры:", fields)
 end
