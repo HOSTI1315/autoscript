@@ -9,6 +9,7 @@ local config = {
         OffsetY     = 0,
         HoverRadius = 5,
         HoverSpeed  = 2,
+        GroundOffsetY = 1,
     },
     KeyUse = {                           -- последовательность нажатий
         {Enum.KeyCode.ButtonX, 4},
@@ -390,8 +391,10 @@ local function walkAroundOnGround(targetPart, stopSignal)
         local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
         local pos = targetPart.Position + offset
         local groundY = getGroundYAtPosition(pos, targetPart.Position.Y)
-        local finalPos = Vector3.new(pos.X, groundY + 2, pos.Z) -- 2 — небольшой отступ от земли
-        hrp.CFrame = CFrame.new(finalPos, targetPart.Position)
+        local groundOffset = config.KillAura.GroundOffsetY or 2
+        local finalPos = Vector3.new(pos.X, groundY + groundOffset, pos.Z)
+        local lookAt = Vector3.new(targetPart.Position.X, finalPos.Y, targetPart.Position.Z)
+        hrp.CFrame = CFrame.new(finalPos, lookAt)
     end)
 end
 
