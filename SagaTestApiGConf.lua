@@ -357,11 +357,15 @@ local function flyToTarget(pos, duration)
 end
 
 -- Получение высоты пола под точкой
-local function getGroundYAtPosition(pos)
+local function getGroundYAtPosition(pos, fallbackY)
     local rayOrigin = pos + Vector3.new(0, 10, 0)
     local rayDirection = Vector3.new(0, -100, 0)
     local raycastParams = RaycastParams.new()
-    raycastParams.FilterDescendantsInstances = {workspace}
+
+    raycastParams.FilterDescendantsInstances = {
+        player.Character,
+        platform
+    }
     raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
     raycastParams.IgnoreWater = true
 
@@ -369,7 +373,7 @@ local function getGroundYAtPosition(pos)
     if result then
         return result.Position.Y
     else
-        return pos.Y -- если пол не найден — остаёмся на текущей высоте
+        return fallbackY or pos.Y -- если не нашли землю — fallback
     end
 end
 
@@ -385,7 +389,7 @@ local function walkAroundOnGround(targetPart, stopSignal)
         angle = angle + dt * speed
         local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
         local pos = targetPart.Position + offset
-        local groundY = getGroundYAtPosition(pos)
+        local groundY = getGroundYAtPosition(pos, targetPart.Position.Y)
         local finalPos = Vector3.new(pos.X, groundY + 2, pos.Z) -- 2 — небольшой отступ от земли
         hrp.CFrame = CFrame.new(finalPos, targetPart.Position)
     end)
