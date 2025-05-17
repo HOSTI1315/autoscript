@@ -546,26 +546,25 @@ end
 
 -- === Хук на появление UI Win ===
 
-    local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-    playerGui.ChildAdded:Connect(function(child)
-        if child.Name == "Win" then
-            task.delay(1, function()
-                reportMatchResults()
+local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+playerGui.ChildAdded:Connect(function(child)
+    if child.Name == "Win" then
+        task.delay(1, function()
+            reportMatchResults()
 
-                -- авто-нажатие Next / Replay / Lobby
-                local remote = game:GetService("ReplicatedStorage").Events.WinEvent.Buttom
-                if remote and remote:IsA("RemoteEvent") then
-                    if config.AutoNext then
-                        remote:FireServer("NextLv")
-                    elseif config.AutoReplay then
-                        remote:FireServer("RPlay")
-                    elseif config.AutoLeave then
-                        remote:FireServer("RLobby")
-                    end
+            -- авто-нажатие Next / Replay / Lobby
+            local remote = game:GetService("ReplicatedStorage").Events.WinEvent.Buttom
+            if remote and remote:IsA("RemoteEvent") then
+                if config.AutoNext then
+                    remote:FireServer("NextLv")
+                elseif config.AutoReplay then
+                    remote:FireServer("RPlay")
+                elseif config.AutoLeave then
+                    remote:FireServer("RLobby")
                 end
-            end)
-        end
-    end)
+            end
+        end)
+    end
 end)
 
 -- Удаление текстур и декалей
