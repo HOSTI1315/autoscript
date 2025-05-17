@@ -541,20 +541,20 @@ local function reportMatchResults()
     
             -- 2. Если не WorldModel, ищем ресурс (Gems, TraitReroll, Gold и т.п.)
             if not name then
-                for _, guiObj in ipairs(item:GetChildren()) do
-                    if guiObj:IsA("GuiObject")
-                    and guiObj.Name ~= "BlockImage"
-                    and guiObj.Name ~= "TextLabel"
-                    and not guiObj:IsA("TextButton") then
-                        name = guiObj.Name
-                        break
+                for _, obj in ipairs(item:GetChildren()) do
+                    if obj:IsA("UIGradient") or obj:IsA("UICorner") or obj:IsA("UIStroke") then
+                        -- исключаем служебные элементы
+                        if obj.Name ~= "UIStroke" and obj.Name ~= "UIGradient" and obj.Name ~= "UICorner" then
+                            name = obj.Name
+                            break
+                        end
                     end
                 end
             end
     
             -- 3. Добавление в список
             if name then
-                table.insert(rewardText, string.format("+%s [%s]", amountText, name))
+                table.insert(rewardText, string.format("%s %s", amountText, name))
             end
         end
     
