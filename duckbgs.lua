@@ -14,7 +14,8 @@ getgenv().UserConfig = {
         "Update2",
         "Lucky",
         "Release",
-        "Thanks"
+        "Thanks",
+        "update4"
     },
     
     EquipBestFlavorGum  = true,
@@ -26,10 +27,10 @@ getgenv().UserConfig = {
     ["Season Challenges"] = true, -- True means there is a chance of getting the secret Luminosity but less hatching xxx false means there is more hatching but no luminosity 
     ["Min tickets"] = "10b", -- Default if not set in UserConfig
     ["Min coins"] = "5b", -- Default if not set in UserConfig
-    ["Giant Chest"] = false,
-    ["Void Chest"] = false,
-    ["Golden Chest"] = false,
-    ["Royal Chest"] = false,
+    ["Giant Chest"] = true,
+    ["Void Chest"] = true,
+    ["Golden Chest"] = true,
+    ["Royal Chest"] = true,
     ["Detector"] = {
         Enable = true,
         ["Name Needed"] = {"Avernus", "Patronus","Queen Kitty","D0GGY1337","Prophet","Wolflord","MAN FACE GOD","King Doggy","The Overlord"}, -- Поиск по имени
@@ -40,7 +41,7 @@ getgenv().UserConfig = {
         }
     },
     ["Alien Shop"] = {
-        Enable = false,
+        Enable = true,
         ["Min Gems"] = "1m",
         ["Items Needed"] = {
             "Golden Key",
@@ -54,7 +55,7 @@ getgenv().UserConfig = {
         }
     },
     ["Black Market"] = {
-        Enable = false,
+        Enable = true,
         ["Min Gems"] = "1m",
         ["Items Needed"] = {
             "Lucky Evolved",
@@ -92,19 +93,18 @@ getgenv().UserConfig = {
         }
     },
     ["Rifts"] = {
-        AlwaysFindRifts = true,
-        Targets = {"Avernus", "Patronus","Queen Kitty","D0GGY1337","Prophet","Wolflord","MAN FACE GOD","King Doggy","The Overlord"}, -- Поиск по имени
+        AlwaysFindRifts = false,
+        Targets = {"Neon Egg", "Chance Egg", "Underworld Egg 3","Underworld Egg 2","Underworld Egg 1", "Underworld Egg 0"}, -- Поиск по имени
         Luck = 5 -- dont change
     },
     ["Secret Bounty"] = {"Prophet", "D0GGY1337", "Queen Kitty"}, -- delete pet name if you dont want that pet
     ["Min gems"] = "1m",
-    FindDuck = "200M Egg", -- Nightmare Egg, Common Egg, Cyber Egg
+    FindDuck = "Infinity egg", -- Nightmare Egg, Common Egg, Cyber Egg
     ["Replace FindDuck"] = "Cyber Egg",
     ["Best Potions Find Duck"] = true, --false if there are only few potions 
     ["Enchant Team 1"] = {enable = true, ["team-up"] = 3},
     ["Gems coefficient"] = 1,
     ["Tickets coefficient"] = 100,
-    ["Auto Restart"] = true,
     
     Webhook = {
         Enable = true,
