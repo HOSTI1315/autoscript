@@ -492,28 +492,32 @@ local function reportMatchResults()
     local victoryLabel = prog:FindFirstChild("victory")
     local rewards = prog:FindFirstChild("reward") and prog.reward:FindFirstChild("ScrollingFrame")
 
-    -- Формируем поля для embed
     local fields = {
         {
-            name = "User",
+            name = "👤 User",
             value = "`" .. username .. "`",
-            inline = true
+            inline = false
         },
         {
-            name = "Level",
-            value = (level and level.Text or "?") .. " [" .. (xpGain and xpGain.Text or "?") .. "/" .. (xpBar and xpBar.Text or "?") .. "]",
-            inline = true
+            name = "📈 Level",
+            value = string.format(
+                "Lv. %s [%s Exp] +%s exp",
+                level and level.Text or "?",
+                xpBar and xpBar.Text or "?",
+                xpGain and xpGain.Text or "?"
+            ),
+            inline = false
         },
         {
-            name = "Result",
-            value = (victoryLabel and victoryLabel.Text or "UNKNOWN"),
-            inline = true
-        },
-        {
-            name = "Playtime",
+            name = "⌛ Playtime",
             value = playtime and playtime.Text or "N/A",
-            inline = true
+            inline = false
         },
+        {
+            name = "🏆 Result",
+            value = victoryLabel and victoryLabel.Text or "UNKNOWN",
+            inline = false
+        }
     }
 
     if rewards then
@@ -530,14 +534,14 @@ local function reportMatchResults()
 
         if #rewardText > 0 then
             table.insert(fields, {
-                name = "Rewards",
+                name = "🎁 Rewards",
                 value = table.concat(rewardText, "\n"),
                 inline = false
             })
         end
     end
 
-    sendWebhookEmbed("Match Results", "Вот результаты последней игры:", fields)
+    sendWebhookEmbed("🎮 Match Results", "Вот результаты последней игры:", fields)
 end
 
 -- === Хук на появление UI Win ===
