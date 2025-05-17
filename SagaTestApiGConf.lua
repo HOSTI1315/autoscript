@@ -357,25 +357,25 @@ local function flyToTarget(pos, duration)
 end
 
 -- Получение высоты пола под точкой
+local groundRoot = workspace:WaitForChild("Map"):WaitForChild("Map")
+
 local function getGroundYAtPosition(pos, fallbackY)
     local rayOrigin = pos + Vector3.new(0, 10, 0)
     local rayDirection = Vector3.new(0, -100, 0)
-    local raycastParams = RaycastParams.new()
 
-    raycastParams.FilterDescendantsInstances = {
-        player.Character,
-        platform
-    }
-    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {groundRoot}
+    raycastParams.FilterType = Enum.RaycastFilterType.Whitelist
     raycastParams.IgnoreWater = true
 
     local result = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
     if result then
         return result.Position.Y
     else
-        return fallbackY or pos.Y -- если не нашли землю — fallback
+        return fallbackY or pos.Y
     end
 end
+
 
 -- Движение по кругу на уровне земли
 local function walkAroundOnGround(targetPart, stopSignal)
@@ -602,9 +602,9 @@ end
 
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 playerGui.ChildAdded:Connect(function(child)
-    if child.Name == "Win" then
+    if child.Name == "Win" or child.Name == "Lost" then
         task.delay(1, function()
-            reportMatchResults()
+            reportMatchResults(child)
 
             -- авто-нажатие Next / Replay / Lobby
             local remote = game:GetService("ReplicatedStorage").Events.WinEvent.Buttom
