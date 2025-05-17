@@ -339,15 +339,23 @@ end)
 
 -- поиск ближайшего моба
 local function getClosestMob()
+    local target = nil
+    local maxHealth = 0
+
     for _, mob in ipairs(workspace.Enemy.Mob:GetChildren()) do
         if mob:IsA("Model")
         and mob:FindFirstChild("Humanoid")
-        and mob.Humanoid.Health > 0
         and mob:FindFirstChild("HumanoidRootPart") then
-            return mob
+
+            local hp = mob.Humanoid.MaxHealth
+            if hp > maxHealth then
+                maxHealth = hp
+                target = mob
+            end
         end
     end
-    return nil
+
+    return target
 end
 
 -- полёт к цели
