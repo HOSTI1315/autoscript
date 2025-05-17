@@ -358,13 +358,6 @@ local function getClosestMob()
     return target
 end
 
--- полёт к цели
-local function flyToTarget(pos, duration)
-    return TweenService:Create(hrp, TweenInfo.new(duration, Enum.EasingStyle.Sine), {
-        CFrame = CFrame.new(pos.X, hrp.Position.Y, pos.Z)
-    })
-end
-
 -- Получение высоты пола под точкой
 local groundRoot = workspace:WaitForChild("Map"):WaitForChild("Map")
 
@@ -385,25 +378,41 @@ local function getGroundYAtPosition(pos, fallbackY)
     end
 end
 
+-- Функция определения земли под точкой
+local function getGroundYAtPosition(pos)
+	local rayOrigin = pos + Vector3.new(0, 10, 0)
+	local rayDirection = Vector3.new(0, -100, 0)
+	local raycastParams = RaycastParams.new()
+	raycastParams.FilterDescendantsInstances = {workspace}
+	raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+	raycastParams.IgnoreWater = true
+	local result = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
+	return result and result.Position.Y or pos.Y
+end
 
--- Движение по кругу на уровне земли
-local function walkAroundOnGround(targetPart, stopSignal)
-    local angle = 0
-    local radius = config.KillAura.HoverRadius or 5
-    local speed = config.KillAura.HoverSpeed or 2
-    local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+-- Перемещение по земле
+local function flyToTarget(pos)
+	character.Humanoid.PlatformStand = false
+	character.Humanoid.Sit = false
+	hrp.Anchored = false
+	local groundY = getGroundYAtPosition(pos)
+	hrp.CFrame = CFrame.new(pos.X, groundY + 2, pos.Z)
+end
 
-    return RunService.Heartbeat:Connect(function(dt)
-        if stopSignal.stop or not hrp then return end
-        angle = angle + dt * speed
-        local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
-        local pos = targetPart.Position + offset
-        local groundY = getGroundYAtPosition(pos, targetPart.Position.Y)
-        local groundOffset = config.KillAura.GroundOffsetY or 2
-        local finalPos = Vector3.new(pos.X, groundY + groundOffset, pos.Z)
-        local lookAt = Vector3.new(targetPart.Position.X, finalPos.Y, targetPart.Position.Z)
-        hrp.CFrame = CFrame.new(finalPos, lookAt)
-    end)
+-- Вращение вокруг цели
+local function orbitAround(targetPart, stopSignal)
+	local angle = 0
+	local radius = config.KillAura.HoverRadius or 5
+	local speed = config.KillAura.HoverSpeed or 2
+	return RunService.Heartbeat:Connect(function(dt)
+		if stopSignal.stop or not targetPart or not targetPart.Parent then return end
+		angle = angle + dt * speed
+		local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
+		local pos = targetPart.Position + offset
+		local y = getGroundYAtPosition(pos) + 2
+		local lookAt = Vector3.new(targetPart.Position.X, y, targetPart.Position.Z)
+		hrp.CFrame = CFrame.new(Vector3.new(pos.X, y, pos.Z), lookAt)
+	end)
 end
 
 -- нажатие клавиш по конфигу
@@ -437,29 +446,39 @@ task.spawn(function()
         local mob = getClosestMob()
 
         if mob then
-            shouldPressKeys = false -- пока летим и позиционируемся — не жмём клавиши
+            shouldPressKeys = false
             noMobsTime = 0
 
             print("👉 Летим к мобу:", mob.Name)
-            local flyTween = flyToTarget(mob.HumanoidRootPart.Position, 1.5)
-            flyTween:Play()
-            flyTween.Completed:Wait()
+
+            -- Новый полёт на землю
+            character.Humanoid.PlatformStand = false
+            character.Humanoid.Sit = false
+            hrp.Anchored = false
+
+            local pos = mob.HumanoidRootPart.Position
+            local groundY = getGroundYAtPosition(pos)
+            hrp.CFrame = CFrame.new(pos.X, groundY + 2, pos.Z)
+
+            task.wait(0.3)
             print("✅ Прилетели")
 
-            shouldPressKeys = true -- начали атаковать, можно жать клавиши
+            shouldPressKeys = true
 
+            -- Новый вращение вокруг моба
             local stopSignal = { stop = false }
-            local hoverConn = walkAroundOnGround(mob.HumanoidRootPart, stopSignal)
+            local orbitConn = orbitAround(mob.HumanoidRootPart, stopSignal)
 
             repeat
                 task.wait(0.2)
             until mob.Humanoid.Health <= 0 or not mob.Parent
 
             stopSignal.stop = true
-            hoverConn:Disconnect()
+            orbitConn:Disconnect()
 
-            shouldPressKeys = false -- моб мёртв — выключаем атаки
+            shouldPressKeys = false
 
+            -- === Infinity Mode ===
             local modeKey = tostring(config.AutoStartStory[1]):upper()
             if modeKey == "I" or modeKey == "INF" or modeKey == "INFINITY" then
                 local roomUi = player.PlayerGui:WaitForChild("RoomUi", 2)
@@ -475,7 +494,10 @@ task.spawn(function()
                     warn("[SkrilyaHub] Infinity mode: NextF GUI не появился за 5 секунд")
                 end
             end
+        else
+            noMobsTime += 0.2
         end
+
         task.wait(0.2)
     end
 end)
