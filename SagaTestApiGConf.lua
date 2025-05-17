@@ -9,7 +9,7 @@ local config = {
         OffsetY     = 0,
         HoverRadius = 5,
         HoverSpeed  = 2,
-        GroundOffsetY = 1,
+        GroundOffsetY = 3,
     },
     KeyUse = {                           -- последовательность нажатий
         {Enum.KeyCode.ButtonX, 4},
