@@ -553,7 +553,7 @@ local function reportMatchResults(winUI)
     }
 
     if rewards then
-        local rewardText = {}
+        local rewardMap = {}
     
         for _, item in ipairs(rewards:GetChildren()) do
             local amountLabel = item:FindFirstChild("TextLabel")
@@ -561,7 +561,7 @@ local function reportMatchResults(winUI)
     
             local name = nil
     
-            -- 1. Попытка получить имя из WorldModel
+            -- 1. Из WorldModel
             local block = item:FindFirstChild("BlockImage")
             if block and block:FindFirstChild("WorldModel") then
                 local worldModel = block.WorldModel
@@ -571,11 +571,10 @@ local function reportMatchResults(winUI)
                 end
             end
     
-            -- 2. Если не WorldModel, ищем ресурс (Gems, TraitReroll, Gold и т.п.)
+            -- 2. Из дочерних объектов (например, Gems и т.п.)
             if not name then
                 for _, obj in ipairs(item:GetChildren()) do
                     if obj:IsA("UIGradient") or obj:IsA("UICorner") or obj:IsA("UIStroke") then
-                        -- исключаем служебные элементы
                         if obj.Name ~= "UIStroke" and obj.Name ~= "UIGradient" and obj.Name ~= "UICorner" then
                             name = obj.Name
                             break
@@ -584,21 +583,58 @@ local function reportMatchResults(winUI)
                 end
             end
     
-            -- 3. Добавление в список
+            -- 3. Группировка
             if name then
-                table.insert(rewardText, string.format("%s %s", amountText, name))
+                local amount = tonumber(amountText:match("x(%d+)")) or 1
+                rewardMap[name] = (rewardMap[name] or 0) + amount
             end
         end
     
-        if #rewardText > 0 then
+        -- 4. Создание строк для Discord
+        local rewardLines = {}
+        for itemName, totalAmount in pairs(rewardMap) do
+            table.insert(rewardLines, string.format("x%d %s", totalAmount, itemName))
+        end
+    
+        if #rewardLines > 0 then
             table.insert(fields, {
                 name = "🎁 Rewards",
-                value = table.concat(rewardText, "\n"),
+                value = table.concat(rewardLines, "\n"),
                 inline = false
             })
         end
+    
+        -- 5. Обновление конфига: прибавляем награды
+        local configFile = "SkrilyaHub_Config.json"
+        local currentData = {}
+    
+        if isfile(configFile) then
+            local ok, result = pcall(function()
+                return HttpService:JSONDecode(readfile(configFile))
+            end)
+            if ok and typeof(result) == "table" then
+                currentData = result
+            end
+        end
+    
+        for name, value in pairs(rewardMap) do
+            local configKeyMap = {
+                ["Gems"] = "Gems",
+                ["Gold"] = "Gold",
+                ["Ticket"] = "Ticket",
+                ["Trait Reroll"] = "TraitReroll"
+            }
+    
+            local key = configKeyMap[name]
+            if key then
+                local old = tonumber(currentData[key]) or 0
+                currentData[key] = tostring(old + value)
+            end
+        end
+    
+        writefile(configFile, HttpService:JSONEncode(currentData))
+        print("[SkrilyaHub] Примерно обновлены значения в конфиге:", currentData)
     end
-
 
     sendWebhookEmbed("🎮 Match Results", "Вот результаты последней игры:", fields)
 end
