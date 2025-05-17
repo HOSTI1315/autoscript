@@ -505,7 +505,7 @@ local function reportMatchResults()
                 level and level.Text or "?",
                 xpBar and xpBar.Text or "?",
                 xpGain and xpGain.Text or "?"
-            )
+            ),
             inline = false
         },
         {
