@@ -432,9 +432,11 @@ task.spawn(function()
             shouldPressKeys = false -- пока летим и позиционируемся — не жмём клавиши
             noMobsTime = 0
 
+            print("👉 Летим к мобу:", mob.Name)
             local flyTween = flyToTarget(mob.HumanoidRootPart.Position, 1.5)
             flyTween:Play()
             flyTween.Completed:Wait()
+            print("✅ Прилетели")
 
             shouldPressKeys = true -- начали атаковать, можно жать клавиши
 
