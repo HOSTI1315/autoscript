@@ -624,15 +624,16 @@ local function reportMatchResults(winUI)
                 ["Ticket"] = "Ticket",
                 ["Trait Reroll"] = "TraitReroll"
             }
-    
+        
             local key = configKeyMap[name]
             if key then
-                local clean = tostring(currentData[key] or ""):gsub("[^%d]", "")
+                -- Удаляем x, запятые, пробелы и берём только цифры
+                local clean = tostring(currentData[key] or ""):gsub(",", ""):match("%d+")
                 local old = tonumber(clean) or 0
                 currentData[key] = tostring(old + value)
             end
         end
-    
+
         writefile(configFile, HttpService:JSONEncode(currentData))
         print("[SkrilyaHub] Примерно обновлены значения в конфиге:", currentData)
     end
