@@ -53,6 +53,9 @@ local player    = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local placeId   = game.PlaceId
 
+-- Флаги
+local shouldPressKeys = false
+
 -- === Создаём свой ScreenGui ===
 local gui = Instance.new("ScreenGui")
 gui.Name           = "SkrilyaHubOverlay"
@@ -374,30 +377,36 @@ end
 
 local function pressKeysSequence()
     while true do
-        for _, keyData in ipairs(config.KeyUse) do
-            for i = 1, keyData[2] do
-                pressKey(keyData[1])
-                task.wait(0.1)
+        if shouldPressKeys then
+            for _, keyData in ipairs(config.KeyUse) do
+                for i = 1, keyData[2] do
+                    pressKey(keyData[1])
+                    task.wait(0.1)
+                end
             end
         end
         task.wait(0.5)
     end
 end
+
 task.spawn(pressKeysSequence)
 
 -- главный цикл фарма
 task.spawn(function()
-    local noMobsTime = 0
+    noMobsTime = 0
 
     while true do
         local mob = getClosestMob()
 
         if mob then
+            shouldPressKeys = false -- пока летим и позиционируемся — не жмём клавиши
             noMobsTime = 0
 
             local flyTween = flyToTarget(mob.HumanoidRootPart.Position, 1.5)
             flyTween:Play()
             flyTween.Completed:Wait()
+
+            shouldPressKeys = true -- начали атаковать, можно жать клавиши
 
             local stopSignal = { stop = false }
             local hoverConn = hoverAbove(mob.HumanoidRootPart, stopSignal)
@@ -408,6 +417,8 @@ task.spawn(function()
 
             stopSignal.stop = true
             hoverConn:Disconnect()
+
+            shouldPressKeys = false -- моб мёртв — выключаем атаки
 
             local modeKey = tostring(config.AutoStartStory[1]):upper()
             if modeKey == "I" or modeKey == "INF" or modeKey == "INFINITY" then
@@ -530,7 +541,7 @@ local function reportMatchResults()
 end
 
 -- === Хук на появление UI Win ===
-task.spawn(function()
+
     local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
     playerGui.ChildAdded:Connect(function(child)
         if child.Name == "Win" then
