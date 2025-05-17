@@ -504,7 +504,7 @@ end
 local function reportMatchResults()
     local player = game:GetService("Players").LocalPlayer
     local gui = player:WaitForChild("PlayerGui")
-    local winUI = gui:WaitForChild("Win", 5)
+    local winUI = gui
     if not winUI then return end
 
     local frame = winUI:WaitForChild("Frame", 2)
