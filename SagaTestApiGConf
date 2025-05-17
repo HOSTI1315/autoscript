@@ -22,6 +22,10 @@ local config = {
     },
     AutoReplay            = true,         -- автоматическое повторение
     AutoNext              = false,        -- перейти к следующему уровню
+    Webhook = {
+            Enable = false,
+            URL = "https://your.webhook.link/here"
+    },
 }
 
 -- Переопределение из getgenv().UserConfig
@@ -398,41 +402,29 @@ task.spawn(function()
         local mob = getClosestMob()
 
         if mob then
-            -- Сбрасываем счётчик, когда mob найден
             noMobsTime = 0
 
-            -- Полёт к мобу и убийство
             local flyTween = flyToTarget(mob.HumanoidRootPart.Position, 1.5)
             flyTween:Play()
             flyTween.Completed:Wait()
 
             local stopSignal = { stop = false }
-            local hoverConn  = hoverAbove(mob.HumanoidRootPart, stopSignal)
+            local hoverConn = hoverAbove(mob.HumanoidRootPart, stopSignal)
 
-            -- Ждём, пока моб жив
             repeat
                 task.wait(0.2)
             until mob.Humanoid.Health <= 0 or not mob.Parent
 
-            -- останавливаем hover
             stopSignal.stop = true
             hoverConn:Disconnect()
 
-            -- Infinity: после убийства сразу шлём команду на спавн следующего босса
             local modeKey = tostring(config.AutoStartStory[1]):upper()
             if modeKey == "I" or modeKey == "INF" or modeKey == "INFINITY" then
-                -- ждём, что RoomUi и NextF появятся (таймаут 5 секунд)
                 local roomUi = player.PlayerGui:WaitForChild("RoomUi", 5)
-                local nextF  = roomUi and roomUi:WaitForChild("NextF", 5)
+                local nextF = roomUi and roomUi:WaitForChild("NextF", 5)
                 if nextF then
-                    -- внутри NextF: Frame → StartButton → Ready → LocalScript → RemoteEvent
                     local ok, err = pcall(function()
-                        nextF.Frame
-                             .StartButton
-                             .Ready
-                             .LocalScript
-                             .RemoteEvent
-                             :FireServer()
+                        nextF.Frame.StartButton.Ready.LocalScript.RemoteEvent:FireServer()
                     end)
                     if not ok then
                         warn("[SkrilyaHub] Не удалось вызвать NextF.RemoteEvent:", err)
@@ -441,52 +433,137 @@ task.spawn(function()
                     warn("[SkrilyaHub] Infinity mode: NextF GUI не появился за 5 секунд")
                 end
             end
-
-
         else
-            -- считаем, сколько секунд нет мобов
             noMobsTime = noMobsTime + 0.2
-        end
-        
-        local timeUp = config.RestartOnTimerEnd and checkRaidTime()
-        
-        -- Проверяем либо/либо
-        local shouldRestart = false
-        
-        if config.RestartOnTimerEnd then
-            -- Только по окончанию таймера
-            shouldRestart = timeUp
-        else
-            -- Только по отсутствию мобов
-            shouldRestart = noMobsTime >= config.RestartIfNoMobsAfter
-        end
-        
-        if shouldRestart then
-            warn(string.format(
-                "[SkrilyaHub] Триггер рестарта: noMobsTime=%.1f, timeUp=%s",
-                noMobsTime, tostring(timeUp)
-            ))
-
-            -- Выполняем Next или Replay в зависимости от конфига
-            local remote = ReplicatedStorage.Events.WinEvent.Buttom
-            if remote and remote:IsA("RemoteEvent") then
-                if config.AutoNext then
-                    remote:FireServer("NextLv")
-                elseif config.AutoReplay then
-                    remote:FireServer("RPlay")
-                end
-            else
-                warn("[SkrilyaHub] RemoteEvent 'Buttom' не найден!")
-            end
-
-            -- Сбрасываем счётчик отсутствия мобов
-            noMobsTime = 0
         end
 
         task.wait(0.2)
     end
 end)
 
+-- === Настройка вебхука ===
+local HttpService = game:GetService("HttpService")
+local webhookConfig = getgenv().UserConfig and getgenv().UserConfig.Webhook or {}
+local webhookURL = webhookConfig.URL
+local webhookEnabled = webhookConfig.Enable
+
+local function sendWebhookEmbed(title, description, fields)
+    if not webhookEnabled or not webhookURL or webhookURL == "" then return end
+
+    local embed = {
+        title = title,
+        description = description,
+        color = 0x00FF99,
+        fields = fields,
+        footer = {
+            text = "SkrilyaHub",
+        },
+        timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+    }
+
+    local request = (syn and syn.request) or http and http.request or http_request or (fluxus and fluxus.request) or request
+    if request then
+        request({
+            Url = webhookURL,
+            Method = "POST",
+            Headers = { ["Content-Type"] = "application/json" },
+            Body = HttpService:JSONEncode({
+                embeds = {embed}
+            })
+        })
+    end
+end
+
+-- === Отправка результатов матча ===
+local function reportMatchResults()
+    local player = game:GetService("Players").LocalPlayer
+    local gui = player:WaitForChild("PlayerGui")
+    local winUI = gui:WaitForChild("Win", 5)
+    if not winUI then return end
+
+    local frame = winUI:WaitForChild("Frame", 2)
+    local prog = frame:WaitForChild("progmain", 2)
+
+    local username = player.Name .. " (@" .. player.DisplayName .. ")"
+    local lvlData = prog:FindFirstChild("lvl") and prog.lvl:FindFirstChild("Level")
+    local level = lvlData and lvlData:FindFirstChild("OnLevel")
+    local xpBar = lvlData and lvlData:FindFirstChild("ExpLoad")
+    local xpGain = lvlData and lvlData:FindFirstChild("Exp")
+    local playtime = prog:FindFirstChild("time") and prog.time:FindFirstChild("playtime")
+    local victoryLabel = prog:FindFirstChild("victory")
+    local rewards = prog:FindFirstChild("reward") and prog.reward:FindFirstChild("ScrollingFrame")
+
+    -- Формируем поля для embed
+    local fields = {
+        {
+            name = "User",
+            value = "`" .. username .. "`",
+            inline = true
+        },
+        {
+            name = "Level",
+            value = (level and level.Text or "?") .. " [" .. (xpGain and xpGain.Text or "?") .. "/" .. (xpBar and xpBar.Text or "?") .. "]",
+            inline = true
+        },
+        {
+            name = "Result",
+            value = (victoryLabel and victoryLabel.Text or "UNKNOWN"),
+            inline = true
+        },
+        {
+            name = "Playtime",
+            value = playtime and playtime.Text or "N/A",
+            inline = true
+        },
+    }
+
+    if rewards then
+        local rewardText = {}
+        for _, rewardFrame in pairs(rewards:GetChildren()) do
+            if rewardFrame:IsA("Frame") then
+                local label = rewardFrame:FindFirstChildOfClass("TextLabel")
+                local nameModel = rewardFrame:FindFirstDescendantWhichIsA("Model")
+                if label and nameModel then
+                    table.insert(rewardText, string.format("+%s [%s]", label.Text, nameModel.Name))
+                end
+            end
+        end
+
+        if #rewardText > 0 then
+            table.insert(fields, {
+                name = "Rewards",
+                value = table.concat(rewardText, "\n"),
+                inline = false
+            })
+        end
+    end
+
+    sendWebhookEmbed("Match Results", "Вот результаты последней игры:", fields)
+end
+
+-- === Хук на появление UI Win ===
+task.spawn(function()
+    local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    playerGui.ChildAdded:Connect(function(child)
+        if child.Name == "Win" then
+            task.delay(1, function()
+                reportMatchResults()
+
+                -- авто-нажатие Next / Replay / Lobby
+                local remote = game:GetService("ReplicatedStorage").Events.WinEvent.Buttom
+                if remote and remote:IsA("RemoteEvent") then
+                    if config.AutoNext then
+                        remote:FireServer("NextLv")
+                    elseif config.AutoReplay then
+                        remote:FireServer("RPlay")
+                    elseif config.AutoLeave then
+                        remote:FireServer("RLobby")
+                    end
+                end
+            end)
+        end
+    end)
+end)
 
 -- Удаление текстур и декалей
 local function removeTextures(root)
