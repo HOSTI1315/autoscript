@@ -522,37 +522,39 @@ local function reportMatchResults()
 
     if rewards then
         local rewardText = {}
-        for _, rewardFrame in pairs(rewards:GetChildren()) do
-            if rewardFrame:IsA("Frame") then
-                local amountLabel = rewardFrame:FindFirstChildWhichIsA("TextLabel")
-                local name = nil
     
-                -- Попытка получить название из WorldModel
-                local blockImage = rewardFrame:FindFirstChild("BlockImage")
-                if blockImage and blockImage:FindFirstChild("WorldModel") then
-                    local worldModel = blockImage.WorldModel
-                    for _, obj in ipairs(worldModel:GetChildren()) do
-                        if obj:IsA("Model") or obj:IsA("MeshPart") then
-                            name = obj.Name
-                            break
-                        end
+        for _, item in ipairs(rewards:GetChildren()) do
+            local amountLabel = item:FindFirstChild("TextLabel")
+            local amountText = amountLabel and amountLabel.Text or "x?"
+    
+            local name = nil
+    
+            -- 1. Попытка получить имя из WorldModel
+            local block = item:FindFirstChild("BlockImage")
+            if block and block:FindFirstChild("WorldModel") then
+                local worldModel = block.WorldModel
+                for _, obj in ipairs(worldModel:GetChildren()) do
+                    name = obj.Name
+                    break
+                end
+            end
+    
+            -- 2. Если не WorldModel, ищем ресурс (Gems, TraitReroll, Gold и т.п.)
+            if not name then
+                for _, guiObj in ipairs(item:GetChildren()) do
+                    if guiObj:IsA("GuiObject")
+                    and guiObj.Name ~= "BlockImage"
+                    and guiObj.Name ~= "TextLabel"
+                    and not guiObj:IsA("TextButton") then
+                        name = guiObj.Name
+                        break
                     end
                 end
+            end
     
-                -- Если нет WorldModel — берём имя одного из известных ресурсов
-                if not name then
-                    for _, child in ipairs(rewardFrame:GetChildren()) do
-                        if child:IsA("Frame") and (child.Name == "Gems" or child.Name == "TraitReroll" or child.Name == "Gold" or child.Name == "Tickets") then
-                            name = child.Name
-                            break
-                        end
-                    end
-                end
-    
-                -- Добавляем, если оба значения есть
-                if name and amountLabel then
-                    table.insert(rewardText, string.format("+%s [%s]", amountLabel.Text, name))
-                end
+            -- 3. Добавление в список
+            if name then
+                table.insert(rewardText, string.format("+%s [%s]", amountText, name))
             end
         end
     
