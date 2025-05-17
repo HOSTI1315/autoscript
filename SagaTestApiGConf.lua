@@ -515,7 +515,7 @@ local function reportMatchResults()
         },
         {
             name = "🏆 Result",
-            value = (victoryLabel and victoryLabel:IsA("TextLabel") and victoryLabel.Text ~= "" and victoryLabel.Text) or "UNKNOWN"
+            value = (victoryLabel and victoryLabel:IsA("TextLabel") and victoryLabel.Text ~= "" and victoryLabel.Text) or "UNKNOWN",
             inline = false
         }
     }
