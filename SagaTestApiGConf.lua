@@ -504,10 +504,15 @@ local function sendWebhookEmbed(title, description, fields)
 end
 
 -- === Отправка результатов матча ===
-local function reportMatchResults()
-    local player = game:GetService("Players").LocalPlayer
-    local gui = player:WaitForChild("PlayerGui")
-    local winUI = gui
+local function reportMatchResults(winUI)
+    if not winUI then return end
+
+    local frame = winUI:FindFirstChild("Frame")
+    if not frame then return end
+
+    local prog = frame:FindFirstChild("progmain")
+    if not prog then return end
+
     if not winUI then return end
 
     local frame = winUI:WaitForChild("Frame", 2)
