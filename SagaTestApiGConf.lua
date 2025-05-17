@@ -501,11 +501,11 @@ local function reportMatchResults()
         {
             name = "📈 Level",
             value = string.format(
-                "Lv. %s [%s Exp] +%s exp",
+                "%s [%s Exp] +%s exp",
                 level and level.Text or "?",
                 xpBar and xpBar.Text or "?",
                 xpGain and xpGain.Text or "?"
-            ),
+            )
             inline = false
         },
         {
@@ -515,7 +515,7 @@ local function reportMatchResults()
         },
         {
             name = "🏆 Result",
-            value = victoryLabel and victoryLabel.Text or "UNKNOWN",
+            value = (victoryLabel and victoryLabel:IsA("TextLabel") and victoryLabel.Text ~= "" and victoryLabel.Text) or "UNKNOWN"
             inline = false
         }
     }
