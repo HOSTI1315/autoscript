@@ -501,7 +501,7 @@ local function reportMatchResults()
         {
             name = "📈 Level",
             value = string.format(
-                "%s [%s Exp] +%s exp",
+                "%s [%s] %s exp",
                 level and level.Text or "?",
                 xpBar and xpBar.Text or "?",
                 xpGain and xpGain.Text or "?"
