@@ -3,21 +3,8 @@
 wait(15)
 script_key = "mphAeAwJEPKAbxQEQSWBZQFNsdPdIXOz";
 getgenv().UserConfig = {
-    FPS                 = 5,
     AddFriends          = true,
-    RedeemCode = {
-        "Sylentlyssorry",
-        "Update3",
-        "Whoops",
-        "Throwback",
-        "Easter",
-        "Update2",
-        "Lucky",
-        "Release",
-        "Thanks",
-        "update4"
-    },
-    
+    RedeemCode = {"RELEASE", "THANKS", "update2", "sylentlyssorry", "update4"},
     EquipBestFlavorGum  = true,
     BuyFlavorGum        = true,
     AutoMinigames       = true,
@@ -25,12 +12,13 @@ getgenv().UserConfig = {
     ["Super Ticket"]    = "Robot Claw",
     ["Use Super Ticket"] = true,
     ["Season Challenges"] = true, -- True means there is a chance of getting the secret Luminosity but less hatching xxx false means there is more hatching but no luminosity 
+    ["Min gems"] = "1m",
     ["Min tickets"] = "10b", -- Default if not set in UserConfig
     ["Min coins"] = "5b", -- Default if not set in UserConfig
-    ["Giant Chest"] = true,
-    ["Void Chest"] = true,
-    ["Golden Chest"] = true,
-    ["Royal Chest"] = true,
+    ["Giant Chest"] = false,
+    ["Void Chest"] = false,
+    ["Golden Chest"] = false,
+    ["Royal Chest"] = false,
     ["Detector"] = {
         Enable = true,
         ["Name Needed"] = {"Avernus", "Patronus","Queen Kitty","D0GGY1337","Prophet","Wolflord","MAN FACE GOD","King Doggy","The Overlord"}, -- Поиск по имени
@@ -99,7 +87,7 @@ getgenv().UserConfig = {
     },
     ["Secret Bounty"] = {"Prophet", "D0GGY1337", "Queen Kitty"}, -- delete pet name if you dont want that pet
     ["Min gems"] = "1m",
-    FindDuck = "Infinity egg", -- Nightmare Egg, Common Egg, Cyber Egg
+    FindDuck = "Neon Egg", -- Nightmare Egg, Common Egg, Cyber Egg
     ["Replace FindDuck"] = "Cyber Egg",
     ["Best Potions Find Duck"] = true, --false if there are only few potions 
     ["Enchant Team 1"] = {enable = true, ["team-up"] = 3},
