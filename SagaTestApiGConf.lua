@@ -627,9 +627,8 @@ local function reportMatchResults(winUI)
     
             local key = configKeyMap[name]
             if key then
-                local currentStr = tostring(currentData[key] or "")
-                local digitsOnly = tonumber(currentStr:match("%d+")) or 0
-                currentData[key] = tostring(digitsOnly + value)
+                local clean = tostring(currentData[key] or ""):gsub("[^%d]", "")
+                local old = tonumber(clean) or 0
                 currentData[key] = tostring(old + value)
             end
         end
