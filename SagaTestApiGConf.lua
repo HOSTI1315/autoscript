@@ -338,82 +338,63 @@ RunService.Heartbeat:Connect(function()
 end)
 
 -- поиск ближайшего моба
+-- === ПОИСК ЖИВОГО МОБА ===
 local function getClosestMob()
-    local target = nil
-    local maxHealth = 0
-
     for _, mob in ipairs(workspace.Enemy.Mob:GetChildren()) do
         if mob:IsA("Model")
         and mob:FindFirstChild("Humanoid")
-        and mob:FindFirstChild("HumanoidRootPart") then
-
-            local hp = mob.Humanoid.MaxHealth
-            if hp > maxHealth then
-                maxHealth = hp
-                target = mob
-            end
+        and mob:FindFirstChild("HumanoidRootPart")
+        and mob.Humanoid.Health > 0 then
+            return mob
         end
     end
-
-    return target
+    return nil
 end
 
--- Получение высоты пола под точкой
-local groundRoot = workspace:WaitForChild("Map"):WaitForChild("Map")
-
-local function getGroundYAtPosition(pos, fallbackY)
-    local rayOrigin = pos + Vector3.new(0, 10, 0)
-    local rayDirection = Vector3.new(0, -100, 0)
-
-    local raycastParams = RaycastParams.new()
-    raycastParams.FilterDescendantsInstances = {groundRoot}
-    raycastParams.FilterType = Enum.RaycastFilterType.Whitelist
-    raycastParams.IgnoreWater = true
-
-    local result = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
-    if result then
-        return result.Position.Y
-    else
-        return fallbackY or pos.Y
-    end
-end
-
--- Функция определения земли под точкой
+-- === РЕЙКАСТ ПО ЗЕМЛЕ ===
 local function getGroundYAtPosition(pos)
-	local rayOrigin = pos + Vector3.new(0, 10, 0)
-	local rayDirection = Vector3.new(0, -100, 0)
-	local raycastParams = RaycastParams.new()
-	raycastParams.FilterDescendantsInstances = {workspace}
-	raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
-	raycastParams.IgnoreWater = true
-	local result = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
-	return result and result.Position.Y or pos.Y
+    local rayParams = RaycastParams.new()
+    rayParams.FilterDescendantsInstances = {workspace}
+    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+    rayParams.IgnoreWater = true
+
+    local origin = pos + Vector3.new(0, 10, 0)
+    local result = workspace:Raycast(origin, Vector3.new(0, -100, 0), rayParams)
+    return (result and result.Position.Y) or pos.Y
 end
 
--- Перемещение по земле
+-- === ПЕРЕМЕЩЕНИЕ НА ЗЕМЛЮ У МОБА ===
 local function flyToTarget(pos)
-	character.Humanoid.PlatformStand = false
-	character.Humanoid.Sit = false
-	hrp.Anchored = false
-	local groundY = getGroundYAtPosition(pos)
-	hrp.CFrame = CFrame.new(pos.X, groundY + 2, pos.Z)
+    -- разблокируем физику
+    character.Humanoid.PlatformStand = false
+    character.Humanoid.Sit = false
+    hrp.Anchored = false
+
+    -- телепорт на 2 юнита над землёй
+    local groundY = getGroundYAtPosition(pos)
+    hrp.CFrame = CFrame.new(pos.X, groundY + 2, pos.Z)
 end
 
--- Вращение вокруг цели
+-- === ВРАЩЕНИЕ ВОКРУГ ЦЕЛИ ===
 local function orbitAround(targetPart, stopSignal)
-	local angle = 0
-	local radius = config.KillAura.HoverRadius or 5
-	local speed = config.KillAura.HoverSpeed or 2
-	return RunService.Heartbeat:Connect(function(dt)
-		if stopSignal.stop or not targetPart or not targetPart.Parent then return end
-		angle = angle + dt * speed
-		local offset = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
-		local pos = targetPart.Position + offset
-		local y = getGroundYAtPosition(pos) + 2
-		local lookAt = Vector3.new(targetPart.Position.X, y, targetPart.Position.Z)
-		hrp.CFrame = CFrame.new(Vector3.new(pos.X, y, pos.Z), lookAt)
-	end)
+    local angle = 0
+    local radius = config.KillAura.HoverRadius or 5
+    local speed  = config.KillAura.HoverSpeed   or 2
+
+    return RunService.Heartbeat:Connect(function(dt)
+        if stopSignal.stop or not targetPart.Parent then
+            stopSignal.conn:Disconnect()
+            return
+        end
+        angle = angle + dt * speed
+        local offset = Vector3.new(math.cos(angle)*radius, 0, math.sin(angle)*radius)
+        local pos = targetPart.Position + offset
+        local y   = getGroundYAtPosition(pos) + 2
+        hrp.CFrame = CFrame.new(Vector3.new(pos.X, y, pos.Z), 
+                                Vector3.new(targetPart.Position.X, y, targetPart.Position.Z))
+    end)
 end
+
 
 -- нажатие клавиш по конфигу
 local function pressKey(keyCode, duration)
@@ -444,28 +425,17 @@ task.spawn(function()
 
     while true do
         local mob = getClosestMob()
-
         if mob then
             shouldPressKeys = false
             noMobsTime = 0
 
             print("👉 Летим к мобу:", mob.Name)
-
-            -- Новый полёт на землю
-            character.Humanoid.PlatformStand = false
-            character.Humanoid.Sit = false
-            hrp.Anchored = false
-
-            local pos = mob.HumanoidRootPart.Position
-            local groundY = getGroundYAtPosition(pos)
-            hrp.CFrame = CFrame.new(pos.X, groundY + 2, pos.Z)
-
+            flyToTarget(mob.HumanoidRootPart.Position)
             task.wait(0.3)
             print("✅ Прилетели")
-
+            
             shouldPressKeys = true
 
-            -- Новый вращение вокруг моба
             local stopSignal = { stop = false }
             local orbitConn = orbitAround(mob.HumanoidRootPart, stopSignal)
 
@@ -478,20 +448,15 @@ task.spawn(function()
 
             shouldPressKeys = false
 
-            -- === Infinity Mode ===
+            -- Infinity Mode
             local modeKey = tostring(config.AutoStartStory[1]):upper()
             if modeKey == "I" or modeKey == "INF" or modeKey == "INFINITY" then
-                local roomUi = player.PlayerGui:WaitForChild("RoomUi", 2)
-                local nextF = roomUi and roomUi:WaitForChild("NextF", 2)
+                local roomUi = playerGui:WaitForChild("RoomUi", 2)
+                local nextF  = roomUi and roomUi:FindFirstChild("NextF")
                 if nextF then
-                    local ok, err = pcall(function()
+                    pcall(function()
                         nextF.Frame.StartButton.Ready.LocalScript.RemoteEvent:FireServer()
                     end)
-                    if not ok then
-                        warn("[SkrilyaHub] Не удалось вызвать NextF.RemoteEvent:", err)
-                    end
-                else
-                    warn("[SkrilyaHub] Infinity mode: NextF GUI не появился за 5 секунд")
                 end
             end
         else
