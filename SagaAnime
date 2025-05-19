@@ -13,8 +13,8 @@ getgenv().UserConfig = {
         {Enum.KeyCode.V,       1},
     },
     AutoReplay          = false,
-    AutoNext            = true,
-    AutoLeave           = false,
+    AutoNext            = false,
+    AutoLeave           = true,
     Webhook = {
             Enable = true,
             URL = "https://discord.com/api/webhooks/1323066038778069104/aw-JU7tPlGWcZMUQR08rMU9RhNgIY3eZnH7726xNwHC6_2g48pllg5FQORbNmQ9xkf6y"
