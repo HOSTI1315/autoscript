@@ -9,6 +9,8 @@ getgenv().UserConfig = {
         {Enum.KeyCode.X, 1},
         {Enum.KeyCode.ButtonX, 4},
         {Enum.KeyCode.C,       1},
+        {Enum.KeyCode.ButtonX, 4},
+        {Enum.KeyCode.V,       1},
     },
     AutoReplay          = false,
     AutoNext            = true,
