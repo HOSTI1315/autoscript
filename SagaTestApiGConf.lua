@@ -22,6 +22,7 @@ local config = {
     AutoReplay            = true,         -- автоматическое повторение
     AutoNext              = false,        -- перейти к следующему уровню
     AutoLeave             = false,
+    ClaimQuest            = true,
     Webhook = {
             Enable = false,
             URL = "https://your.webhook.link/here"
@@ -202,6 +203,30 @@ if placeId == 17850641257 then
     addGrayText("Trait Reroll: " .. data.TraitReroll)
     addGrayText("Tickets: "      .. data.Ticket)
     addGrayText("Config saved")
+
+    local function ClaimAvailableQuests()
+        if not config.ClaimQuest then return end
+    
+        for i = 0, 4 do -- Daily quests
+            local args = { "Daily", i }
+            pcall(function()
+                ReplicatedStorage.Event.Quest:FireServer(unpack(args))
+            end)
+            task.wait(0.1)
+        end
+    
+        for i = 0, 7 do -- Weekly quests
+            local args = { "Weekly", i }
+            pcall(function()
+                ReplicatedStorage.Event.Quest:FireServer(unpack(args))
+            end)
+            task.wait(0.1)
+        end
+    
+        print("[SkrilyaHub] Квесты собраны.(Наверное)")
+    end
+    
+    ClaimAvailableQuests()
 
     -- 2) Запускаем автостарт + Ready спустя 2 секунды
     task.delay(2, function()
