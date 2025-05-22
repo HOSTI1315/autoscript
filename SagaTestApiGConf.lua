@@ -4,7 +4,7 @@ wait(10)
 -- === Конфигурация ===
 -- Дефолтные значения
 local config = {
-    AutoStartStory        = {"S", 1, 1, 1},    -- {Mode, Level, Difficulty}
+    AutoStartStory        = {"R", 1, 1, 1},    -- {Mode, Level, Difficulty}
     KillAura = {
         OffsetY     = 0,
         HoverRadius = 5,
