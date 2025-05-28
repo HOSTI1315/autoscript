@@ -64,8 +64,8 @@ getgenv().UserConfig = {
     ["Tickets coefficient"] = 100,
     ["Seashells coefficient"] = 24,
 
-    FindDuck = "Cyber Egg",
-    ["Replace FindDuck"] = "Cyber Egg",
+    FindDuck = "Icecream Egg", -- Fruit Egg, Nightmare Egg, Common Egg, Cyber Egg, Neon Egg
+    ["Replace FindDuck"] = "Fruit Egg",
     ["Best Potions Find Duck"] = true,
 
     ["Enchant Team 1"] = {enable = true, ["team-up"] = 3},
