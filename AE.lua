@@ -1,3 +1,5 @@
+wait(5)
+
 -- 1) Ссылки
 local loader_url = "https://api.luarmor.net/files/v3/loaders/180154ec7abc246752b60603a7adc12d.lua"
 local webhook_url = "https://raw.githubusercontent.com/rosel4k/scripts/refs/heads/main/AEwebhook.lua"
