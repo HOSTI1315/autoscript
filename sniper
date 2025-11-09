@@ -1,0 +1,69 @@
+script_key = 'mkSEsqrDvuOzAvUIynPCALKGwRuGZxhs' -- Your Premium Key here
+
+--Settings For Booths Sniper
+_G.ZapHubBoothsSniperSettings = {
+    MinimumGems = 0,
+    Items = {
+        {Item = "Gargantuan Aura Cat", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Dark Dragon", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Dot Matrix Pegasus", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Exquisite Parrot", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Forest Wyvern", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Googly Agony", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Grim Reaper", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Hellish Axolotl", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Hypnotic Kitsune", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Jurassic Dragon", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Kaiju King", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Magma Spirit", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Matryoshka Bear", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Nyan Cat", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Patchwork Agony", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Royal Beast", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Santa Paws", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Starfall Dragon", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Super Coral Kraken", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Totem Monkey", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Treasure Angelus", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Yin-Yang Kitsune", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Golden Gargantuan Grim Reaper", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Golden Gargantuan Hellish Axolotl", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Rainbow Gargantuan Aura Cat", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Rainbow Gargantuan Googly Agony", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Rainbow Gargantuan Grim Reaper", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Rainbow Gargantuan Hypnotic Kitsune", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Rainbow Gargantuan Kaiju King", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Cappuccino Brainrot", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Doge", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Skelemelon", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Super Cat", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Black Balloon Cat", MaxPrice = 38000000000, Class = "Pet"},
+        {Item = "Gargantuan Frankenpup Dog", MaxPrice = 38000000000, Class = "Pet"},
+    },
+    Extras = {
+        TitanicPet = {
+            Enabled = false,
+            PercentageProfit = '25',
+            MaxPrice = 10000000000,
+        },
+        HugePet = {
+            Enabled = false,
+            PercentageProfit = '25',
+            MaxPrice = 100000000,
+        },
+        AnyItem = {
+            Enabled = false,
+            PercentageProfit = '100',
+            MaxPrice = 1000000,
+        },
+    },
+    ServerHop = {
+        Enabled = true, -- true / false
+    },
+    Webhook = {
+        Enabled = true, -- true / false
+        WebhookURL = '', -- Your Discord Webhook URL here.
+    },
+}
+
+loadstring(game:HttpGet('https://zaphub.xyz/ExecBoothSniper'))()
