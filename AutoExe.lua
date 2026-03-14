@@ -68,6 +68,17 @@ if not getgenv().scriptExecuted then
             loadAndRunScript(entry)
         else
             warn("[AutoExe] Нет скрипта для CreatorId " .. creatorId .. " (игрок " .. playerName .. ")")
+            warn("[AutoExe] Нажми F4 — CreatorId скопируется в буфер обмена")
+            local uis = game:GetService("UserInputService")
+            local conn
+            conn = uis.InputBegan:Connect(function(input, processed)
+                if processed then return end
+                if input.KeyCode == Enum.KeyCode.F4 then
+                    local id = tostring(game.CreatorId)
+                    setclipboard(id)
+                    print("[AutoExe] CreatorId " .. id .. " скопирован в буфер обмена")
+                end
+            end)
         end
     end
 
