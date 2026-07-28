@@ -99,7 +99,7 @@ end
 --=====================================================--
 --                   КОНФИГ KAITUN                     --
 --=====================================================--
-getgenv().Key = "aKePbveqzrlcmAGOTHTwvPpNjpYUgseh "
+getgenv().Key = "aKePbveqzrlcmAGOTHTwvPpNjpYUgseh"
 getgenv().KaitunConfig = {
     ["Method"] = "Full Progresstion",
     ["Performance"] = {
