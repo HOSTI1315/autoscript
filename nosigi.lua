@@ -3,7 +3,7 @@
 --=====================================================--
 
 --== НАСТРОЙКИ ==--
-local WEBHOOK_URL   = "https://discord.com/api/webhooks/ТВОЙ_ID/ТВОЙ_TOKEN"
+local WEBHOOK_URL   = "https://discord.com/api/webhooks/1531094977738965032/rkv_c-PSslvviq7sNWFhmaVCtj6op-0JF1LHrRnThJx6ouJThhbffBfttSvRpVghZNSa"
 local WEBHOOK_NAME  = "Kaitun Loader"
 local LOAD_TIMEOUT  = 120   -- сек, через сколько считать загрузку провальной
 
